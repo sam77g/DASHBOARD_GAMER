@@ -18,6 +18,7 @@ const horasInput = document.querySelector("#horas");
 const selectPlataforma = document.querySelector('#plataforma');
 const lista = document.querySelector('#lista'); // lista de jogos 
 const mensagem = document.querySelector('#mensagem'); // mensagem da lista enquanto digita
+let jogoEmEdicao = null;
 // DADOS
 const usernameString = localStorage.getItem('user');
 
