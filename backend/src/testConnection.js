@@ -1,20 +1,21 @@
-const conexao = require("./config/database");
+const mysql = require("mysql2");
+require("dotenv").config();
 
-async function testarConexao() {
-    try {
-        const [resultado] = await conexao.query(
-            "SELECT NOW() AS data_atual"
-        );
+const connection = mysql.createConnection({
+    host: process.env.DB_HOST,
+    port: process.env.DB_PORT,
+    user: process.env.DB_USER,
+    password: process.env.DB_PASSWORD,
+    database: process.env.DB_NAME
+});
 
-        console.log("Conexão com MySQL estabelecida!");
-        console.log(resultado);
-
-    } catch (erro) {
+connection.connect((erro) => {
+    if (erro) {
         console.error("Erro ao conectar:", erro.message);
-
-    } finally {
-        await conexao.end();
+        return;
     }
-}
 
-testarConexao();
+    console.log("Conexão com MySQL estabelecida!");
+
+    connection.end();
+});
