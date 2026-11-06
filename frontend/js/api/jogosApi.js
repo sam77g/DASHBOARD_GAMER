@@ -1,0 +1,1 @@
+// -- Importante: utilize consultas parametrizadas (?) com mysql2. Não monte comandos SQL concatenando os dados recebidos do usuário. Isso ajuda a prevenir SQL Injection.
