@@ -3,102 +3,30 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DASH BOARD</title>
+    <title>LOGIN</title>
     <link rel="stylesheet" type='text/css' href="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/devicon.min.css" />
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="./assets/css/LoginStyle.css">
 </head>
 <body>
-    <!-- GUIA : -->
-    <!-- https://css-tricks.com/snippets/css/a-guide-to-flexbox/ -->
-    <header><h1>DASHBOARD GAMER 🎮</h1></header>
-    <article>
-        
-        <main>
-            <!-- perfil do jogador -->
-            <section class="perfil" id="perfil">
-
-                <div class="info" id="info">
-                    <h1 id="usernameInfo"></h1>
-                    <p>Xp</p>
-                    <p>level</p>
-                </div>
-                <div class="conteudoPerfil">
-                    
-                    
-                    <div class="formulario" id="formulario">
-                        <!-- campos  -->
-                        <div class="campo">
-                            <label for="nomeDoJogo">Nome do Jogo</label>
-                            <input type="text" id="nomeDoJogo" placeholder="Nome do jogo" maxlength="50">
-                        </div>
-
-                        <div class="campo">
-                            <label for="horas">Horas Jogadas</label>
-                            <input type="number" id="horas" placeholder="Horas jogadas" >
-                        </div>
-
-
-                        <div class="campo">
-                            <label for="plataforma">Plataforma</label>
-                            <select name="" id="plataforma">
-                                <option value="selection">Selecione a plataforma</option>
-                                <option value="ps1">PS1</option>
-                                <option value="ps2">PS2</option>
-                                <option value="ps3">PS3</option>
-                                <option value="ps4">PS4</option>
-                                <option value="psp">PSP</option>
-                                <option value="psVita">PS VITA</option>
-                                <option value="pc">PC</option>
-                                <option value="xbox">XBOX</option>
-                                <option value="xbox_360">XBOX 360</option>
-                                <option value="xbox_One">XOBX ONE</option>
-                                <option value="xbox_series">XBOX SERIES</option>
-                                <option value="switch">N. SWITCH</option>
-                                <option value="switch_2">N. SWITCH 2</option>
-                            </select>
-
-                        </div>
-
-                        <!-- botão -->
-                        <button id="btn">ADICIONAR</button>
-                    </div>
-
-                    <div class="conquistas" id="conquistas">
-                    </div>
-
-                </div>
-            </section>
-
-            <!-- Jogos -->
-            <section class="jogos" id="jogos">
-
-                <div class="titulo" id="titulo">
-                    <h1>JOGOS</h1>
-                </div>
-
-                <label for="pesquisaInput">Pesquisar</label>
-                <div class="campo" id="pesquisaCampo" >
-                    <input type="text" id="pesquisaInput">
-                </div>
-
-                <div class="lista" id="lista">
-                    <div id="mensagem"></div>
-                    <!-- card do jogo -->
-                </div>
-            </section>
-        </main>
-
-    </article>
+    <header> <h1>LOGIN </h1></header>
+    <main class="container" id="loginConatainer">
+        <form action="./dashboard/index.html" method="get" id="formulario">
+            <h2>Entre na sua conta</h2>
+            <input type="text" placeholder="Username" name="sername" id="username">
+            <input type="email" placeholder="email" required name="email" id="email">
+            <input type="submit" id="btn" name="btn">
+        </form>
+    </main>
 
     <footer>&copy;sam77g
     <a href="https://github.com/sam77g" target="_blank"> 
             <i class="devicon-github-original"></i>
     </a>
-    <a href="https://linkedin.com/in/samuel-santana-assis" target="_blank"> 
+    <a href="www.linkedin.com/in/samuel-santana-assis" target="_blank"> 
         <i class="devicon-linkedin-plain"></i>
     </a>
     </footer> 
 
-    <script type="module" src="../js/script.js"></script>
+    <script src="auth.js"></script>
 </body>
 </html>
