@@ -1,12 +1,13 @@
-CREATE DATABASE dashboardgamer   ;
-USE dashboardgamer ;
+CREATE DATABASE IF NOT EXISTS dashboardgamer;
 
-CREATE TABLE jogos (
-    id INT PRIMARY KEY,
+USE dashboardgamer;
+
+CREATE TABLE IF NOT EXISTS jogos (
+    id INT AUTO_INCREMENT PRIMARY KEY,
     nome VARCHAR(120) NOT NULL,
     horas_jogadas DECIMAL(6,1) NOT NULL,
-    platforma VARCHAR(50) NOT NULL,
+    plataforma VARCHAR(50) NOT NULL,
     criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     atualizado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        ON UPDATE CURRENT_TIMESTAMP
 );
-
