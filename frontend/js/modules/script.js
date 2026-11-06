@@ -1,7 +1,7 @@
 // imports
 import { mostrarJogos } from "./mostrarJogos.js";
 import { editarGame } from "./editGame.js";
-import { jogoExiste, validar } from "./validar.js"; // função de validação
+import { jogoExiste, validar } from "../utils/validar.js"; // função de validação
 import { carregarJogos, salvarJogos } from "./storage.js"; // função de salvar e carregar os jogos
 import { criarCard } from "./gameCard.js"; // função para criar os cards dos jogos
 import { pesquisar } from "./pesquisar.js";
