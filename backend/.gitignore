@@ -1,0 +1,56 @@
+# Dependencies
+node_modules/
+.pnpm-store/
+.yarn/cache/
+.yarn/unplugged/
+
+# Production builds
+dist/
+build/
+.next/
+.nuxt/
+.out/
+.svelte-kit/
+
+# Environment variables & secrets
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+*.pem
+*.key
+
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Runtime data & Databases
+*.sqlite
+*.sqlite3
+
+# Coverage / Testing
+coverage/
+.nyc_output/
+cypress/videos/
+cypress/screenshots/
+
+# IDEs & Editors
+.vscode/*
+!.vscode/extensions.json
+!.vscode/settings.json
+.idea/
+*.swp
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# Misc
+.cache/
+.eslintcache
+.turbo/
