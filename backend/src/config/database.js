@@ -1,5 +1,5 @@
-const mysql = require("mysql2/promise");
-require("dotenv").config();
+const mysql = require("mysql2/promise"); // importando o módulo mysql2 com suporte a Promises
+require("dotenv").config(); // carrgando as váriaveis de ambiente
 
 const conexao = mysql.createPool({
     host: process.env.DB_HOST,
