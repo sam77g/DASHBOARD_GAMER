@@ -7,7 +7,7 @@ async function listarJogos(req, res) {
     try {
 
         const [jogos] = await database.execute(
-            "SELECT * FROM jogos"
+            "SELECT * FROM jogos "
         );
         res.status(200).json(jogos);
         // 200: operação realizada com sucesso.
