@@ -18,3 +18,6 @@ const PORT = 3000;
 app.listen(PORT, () => {
     console.log(`Servidor rodando em http://localhost:${PORT}`);
 });
+
+// Resultado:
+// GET http://localhost:3000/api/jogos
