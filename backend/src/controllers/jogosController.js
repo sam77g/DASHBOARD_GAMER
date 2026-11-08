@@ -10,14 +10,16 @@ async function listarJogos(req, res) {
             "SELECT * FROM jogos"
         )
 
-        return jogos
+        res.satus(200).json(jogos)
 
 
     } catch (erro) {
 
-        console.log(erro)
+        console.log("Erro ao listar os jogo ", erro)
 
-        throw erro
+        res.status(500).json({
+            mensagem: "Erro interno ao buscar jogos."
+        });
 
     }
 }
