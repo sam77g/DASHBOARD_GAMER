@@ -55,7 +55,7 @@ async function cadastrarJogo(req, res) {
         let parametros = [];
 
         // lembrar de impletar a verificação de nomes vazios
-        if (!nome || (typeof horas_jogadas !== "number" || !Number.isFinite(horas_jogadas) || horas_jogadas < 0) || !plataforma) {
+        if ((!nome || nome.trim().toUpperCase() == '') || (typeof horas_jogadas !== "number" || !Number.isFinite(horas_jogadas) || horas_jogadas < 0) || !plataforma) {
             return res.status(400).json({ mensagem: "nome ,horas e plataforma vazias/inválidas" })
         } else {
             parametros.push(nome, horas_jogadas, plataforma)
@@ -125,10 +125,10 @@ async function editarJogo(req, res) {
 
 
         // lembrar de impletar a verificação de nomes vazios
-        if (!nome || (typeof horas_jogadas !== "number" || !Number.isFinite(horas_jogadas) || horas_jogadas < 0) || !plataforma) {
+        if ((!nome || nome.trim().toUpperCase() == '') || (typeof horas_jogadas !== "number" || !Number.isFinite(horas_jogadas) || horas_jogadas < 0) || !plataforma) {
             return res.status(400).json({ mensagem: "nome ,horas e plataforma vazias/inválidas" })
         } else {
-            parametros.push(nome, horas_jogadas, plataforma, resultadoId)
+            parametros.push(nome, horas_jogadas, plataforma, id)
         }
 
 
