@@ -12,7 +12,7 @@ app.use(express.json());
 // /api/jogos + /
 app.use("/api/jogos", jogosRoutes);
 
-// Iniciar servidor na porta 300
+// Iniciar servidor na porta 3000
 const PORT = 3000;
 
 app.listen(PORT, () => {
