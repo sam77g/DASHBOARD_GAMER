@@ -49,10 +49,9 @@ async function cadastrarJogo(req, res) {
         try {
             let {nome, horas_jogadas, plataforma } = req.body
             let parametros = [] ;
-            let jogos ;
 
-            if(!nome || horas_jogadas == undefined || !plataforma){
-                return res.status(400).json({mensagem : "nome ,horas e plataforma vazias"})
+            if(!nome || (typeof horas_jogadas !== "number" || !Number.isFinite(horas_jogadas) || horas_jogadas < 0 )|| !plataforma){
+                return res.status(400).json({mensagem : "nome ,horas e plataforma vazias/inválidas"})
             } else{
                 parametros.push(nome, horas_jogadas, plataforma)
             }
@@ -62,7 +61,10 @@ async function cadastrarJogo(req, res) {
                     parametros
             );
 
-            res.status(201).json("jogo cadastrado com sucesso")
+            res.status(201).json({
+                mensagem: "Jogo cadastrado com sucesso",
+                id: resultado.insertId
+            })
             
         } catch (error) {
             console.error("Erro ao cadastrar o jogo:", error);
