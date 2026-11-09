@@ -106,6 +106,44 @@ async function buscarJogoPorId(req, res) {
     }
 }
 async function editarJogo(req, res) {
+    try {
+        let { id } = req.params;
+        let { nome, horas_jogadas, plataforma } = req.body
+        let parametros = [];
+
+        const [resultadoId] = await database.execute(
+            "SELECT * FROM jogos WHERE id = ?",
+            [id]
+        );
+
+        // verifica se o [resultado] está vazio, se está significa que não há nenhum com o id solicitado
+        if (resultadoId.length === 0) {
+            return res.status(404).json({
+                mensagem: "Jogo não encontrado"
+            });
+        }
+
+
+        // lembrar de impletar a verificação de nomes vazios
+        if (!nome || (typeof horas_jogadas !== "number" || !Number.isFinite(horas_jogadas) || horas_jogadas < 0) || !plataforma) {
+            return res.status(400).json({ mensagem: "nome ,horas e plataforma vazias/inválidas" })
+        } else {
+            parametros.push(nome, horas_jogadas, plataforma, resultadoId)
+        }
+
+
+        const [resultado] = await database.execute(
+            "UPDATE jogos SET nome = ?, horas_jogadas = ?, plataforma = ? WHERE id = ?",
+            parametros
+        );
+
+        res.status(200).json(resultado)
+    } catch (error) {
+        console.error("Erro ao alterar o jogo:", error);
+        res.status(500).json({
+            mensagem: "Erro interno ao alterar o jogo."
+        });
+    }
 
 }
 module.exports = {

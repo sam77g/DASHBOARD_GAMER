@@ -14,5 +14,7 @@ router.post("/", jogosController.cadastrarJogo)
 
 router.get("/:id", jogosController.buscarJogoPorId);
 
+router.put("/:id", jogosController.editarJogo)
+
 // Exportando
 module.exports = router;
