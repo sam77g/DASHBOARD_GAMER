@@ -151,9 +151,48 @@ async function editarJogo(req, res) {
     }
 
 }
+
+async function excluirJogo(req, res) {
+    try {
+        let { id } = req.params;
+
+        const [resultadoId] = await database.execute(
+            "SELECT * FROM jogos WHERE id = ?",
+            [id]
+        );
+
+        // verifica se o [resultado] está vazio, se está significa que não há nenhum com o id solicitado
+        if (resultadoId.length === 0) {
+            return res.status(404).json({
+                mensagem: "Jogo não encontrado"
+            });
+        }
+
+        const [resultado] = await database.execute(
+            "DELETE FROM jogos WHERE id = ?",
+            [id]
+
+        );
+
+        res.status(200).json({
+            mensagem: "Jogo deletado com sucesso !",
+            id: id,
+        })
+
+
+    } catch (error) {
+        console.error("Erro ao deletar o jogo:", error);
+        res.status(500).json({
+            mensagem: "Erro interno ao deletar o jogo."
+        });
+    }
+
+}
+
 module.exports = {
     listarJogos,
     cadastrarJogo,
     buscarJogoPorId,
-    editarJogo
+    editarJogo,
+    excluirJogo
 };

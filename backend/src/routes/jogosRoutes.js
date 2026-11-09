@@ -10,11 +10,13 @@ const jogosController = require("../controllers/jogosController"); // importando
 router.get("/", jogosController.listarJogos);
 
 // método POST (.post), caminho /, função executada cadastrarJogo()
-router.post("/", jogosController.cadastrarJogo)
+router.post("/", jogosController.cadastrarJogo);
 
 router.get("/:id", jogosController.buscarJogoPorId);
 
-router.put("/:id", jogosController.editarJogo)
+router.put("/:id", jogosController.editarJogo);
+
+router.delete("/:id", jogosController.excluirJogo);
 
 // Exportando
 module.exports = router;
