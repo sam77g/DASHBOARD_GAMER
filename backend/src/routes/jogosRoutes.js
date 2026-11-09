@@ -9,5 +9,7 @@ const jogosController = require("../controllers/jogosController"); // importando
 // método GET (.get), caminho "/" , função executada listarJogos()
 router.get("/", jogosController.listarJogos);
 
+router.post("/", jogosController.cadastrarJogo)
+
 // Exportando
 module.exports = router;

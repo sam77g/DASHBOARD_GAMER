@@ -45,6 +45,34 @@ async function listarJogos(req, res) {
     }
 }
 
+async function cadastrarJogo(req, res) {
+        try {
+            let {nome, horas_jogadas, plataforma } = req.body
+            let parametros = [] ;
+            let jogos ;
+
+            if(!nome || horas_jogadas == undefined || !plataforma){
+                return res.status(400).json({mensagem : "nome ,horas e plataforma vazias"})
+            } else{
+                parametros.push(nome, horas_jogadas, plataforma)
+            }
+
+            const [resultado] = await database.execute(
+                    "INSERT INTO jogos (nome, horas_jogadas, plataforma) VALUES (?,?,?)",
+                    parametros
+            );
+
+            res.status(201).json("jogo cadastrado com sucesso")
+            
+        } catch (error) {
+            console.error("Erro ao cadastrar o jogo:", error);
+            res.status(500).json({
+                mensagem: "Erro interno ao cadastrar o jogo."
+            });
+        }
+} 
+
 module.exports = {
-    listarJogos
+    listarJogos,
+    cadastrarJogo
 };
