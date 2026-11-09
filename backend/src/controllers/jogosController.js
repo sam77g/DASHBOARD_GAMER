@@ -137,7 +137,12 @@ async function editarJogo(req, res) {
             parametros
         );
 
-        res.status(200).json(resultado)
+        res.status(200).json({
+            mensagem: "Jogo alterado com sucesso !",
+            id: resultado.insertId,
+            jogo: nome
+        })
+
     } catch (error) {
         console.error("Erro ao alterar o jogo:", error);
         res.status(500).json({
