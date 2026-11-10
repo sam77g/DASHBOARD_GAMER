@@ -1,1 +1,12 @@
-// -- Importante: utilize consultas parametrizadas (?) com mysql2. Não monte comandos SQL concatenando os dados recebidos do usuário. Isso ajuda a prevenir SQL Injection.
+// INTERLIGAÇÃO COM A API DO BACKEND
+
+async function listarJogos() {
+    fetch("http://localhost:3000/api/jogos")
+        .then(reposta => resposta.json())
+        .then(dados => {
+            console.log(dados)
+        })
+        .catch(erro => {
+            console.error("Erro", erro);
+        })
+}
