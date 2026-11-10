@@ -1,3 +1,4 @@
+// gameCard.js
 // função para criar os cards dos jogos
 export function criarCard(jogo) {
     console.log("criando", jogo.nome);
@@ -22,11 +23,11 @@ export function criarCard(jogo) {
     gameCard.appendChild(dadosGame);
 
     let titulo = criarTitulo();
-    titulo.textContent = `${jogo.jogo}`;
+    titulo.textContent = `${jogo.nome}`;
     dadosChild(titulo);
 
     let horasJogo = criarParagrafo();
-    horasJogo.textContent = ` ${jogo.horas} horas`
+    horasJogo.textContent = ` ${jogo.horas_jogadas} horas`
     dadosChild(horasJogo);
 
     let plataformaJogo = criarParagrafo();

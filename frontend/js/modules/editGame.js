@@ -1,10 +1,12 @@
-export function editarGame(array, id, novosDados){
+// editGame.js - Arquivo com a função de editar os jogos
+// funcionalidade não completada
+export function editarGame(array, id, novosDados) {
 
-    const jogoEncontrado = array.find(function(jogo){
+    const jogoEncontrado = array.find(function (jogo) {
         return jogo.id === id;
     });
 
-    if(!jogoEncontrado){
+    if (!jogoEncontrado) {
         return false;
     }
 

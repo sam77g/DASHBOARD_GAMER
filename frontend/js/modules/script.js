@@ -5,7 +5,7 @@ import { jogoExiste, validar } from "../utils/validar.js"; // função de valida
 import { carregarJogos, salvarJogos } from "./storage.js"; // função de salvar e carregar os jogos
 import { criarCard } from "./gameCard.js"; // função para criar os cards dos jogos
 import { pesquisar } from "./pesquisar.js";
-import { listarJogos } from "../api/jogosApi.js";
+import { cadastrarJogo, listarJogos } from "../api/jogosApi.js";
 
 // Variavéis
 // DOM ELEMENTS
@@ -29,7 +29,7 @@ let listaDeJogos = [];
 
 
 // funções
-function adicionarDados() {
+async function adicionarDados() {
 
     // DOM ELEMENTS 
     const valorSelect = String(selectPlataforma.value)
@@ -46,13 +46,17 @@ function adicionarDados() {
 
             // adicionando os dados em um objeto no array
             listaDeJogos.push({
-                jogo,
-                horas: horasJogadas,
+                nome: jogo,
+                horas_jogadas: horasJogadas,
                 plataforma,
-                id: listaDeJogos.length
             })
 
             // chamada de função
+            await cadastrarJogo({
+                nome: jogo,
+                horas_jogadas: horasJogadas,
+                plataforma,
+            })
             salvarJogos(listaDeJogos)
             mostrarJogos(listaDeJogos);
             limparInputs()
@@ -63,19 +67,6 @@ function adicionarDados() {
 
     }
 
-    /*
-    como deve ficar o objeto futuramente :
-    
-    {
-        jogo
-        horas
-        plataforma
-        categoria
-        desenvolvedora
-        nota/avaliação
-        }
-        
-        */
 }
 
 
