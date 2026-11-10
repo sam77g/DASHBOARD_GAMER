@@ -1,13 +1,21 @@
 // INTERLIGAÇÃO COM A API DO BACKEND
 
-async function listarJogos() {
+export async function listarJogos() {
     try {
-        const response = await fetch("http://localhost:3000/api/jogos") // faz a requisição
-        if (!response.ok) throw new Error("Erro interno ao listar os jogos") // caso a requisição der falha ele para
-        const jogos = await response.json() // aqui os dados são convertidos para JSON
-        return jogos
+        const response = await fetch("http://localhost:3000/api/jogos");
+
+        if (!response.ok) {
+            throw new Error("Erro ao consultar a API");
+        }
+
+        const jogos = await response.json();
+
+        return jogos;
+
     } catch (error) {
-        console.error(error); // exibe no console o erro 
+        console.error("Erro ao listar jogos:", error);
         throw error;
     }
 }
+
+

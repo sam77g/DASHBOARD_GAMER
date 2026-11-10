@@ -5,15 +5,16 @@ import { jogoExiste, validar } from "../utils/validar.js"; // função de valida
 import { carregarJogos, salvarJogos } from "./storage.js"; // função de salvar e carregar os jogos
 import { criarCard } from "./gameCard.js"; // função para criar os cards dos jogos
 import { pesquisar } from "./pesquisar.js";
+import { listarJogos } from "../api/jogosApi.js";
 
 // Variavéis
 // DOM ELEMENTS
 const btn = document.querySelector('#btn');
-const btnEditar = document.querySelector('#editarBtn'); // botão de editar
+// const btnEditar = document.querySelector('#editarBtn'); // botão de editar
 // inputs
 const pesquisaInput = document.querySelector("#pesquisaInput");
 const UserNameInfo = document.querySelector("#usernameInfo");
-const jogoInput =  document.querySelector("#nomeDoJogo");
+const jogoInput = document.querySelector("#nomeDoJogo");
 const horasInput = document.querySelector("#horas");
 const selectPlataforma = document.querySelector('#plataforma');
 const lista = document.querySelector('#lista'); // lista de jogos 
@@ -23,44 +24,45 @@ let jogoEmEdicao = null;
 const usernameString = localStorage.getItem('user');
 
 // ARRAY DE OBJETOS
-const listaDeJogos = carregarJogos();
-console.log(listaDeJogos);
+// const listaDeJogos = carregarJogos();
+let listaDeJogos = [];
+
 
 // funções
-function adicionarDados(){
-    
+function adicionarDados() {
+
     // DOM ELEMENTS 
     const valorSelect = String(selectPlataforma.value)
-    const jogo = jogoInput.value ;
+    const jogo = jogoInput.value;
     const horasJogadas = Number(horasInput.value)
-    const plataforma = selectPlataforma.options[selectPlataforma.selectedIndex].text ;
+    const plataforma = selectPlataforma.options[selectPlataforma.selectedIndex].text;
     const jogoNome = jogo.trim().toLowerCase()
-    
+
     //  validação 
     // verifica se o usuário digitou o nome e as horas jogadas, além de verificar o valor do select
-    if(validar(jogo,horasJogadas,valorSelect, listaDeJogos) == true){
+    if (validar(jogo, horasJogadas, valorSelect, listaDeJogos) == true) {
         // verifica se o jogo já foi adicionado
-        if(jogoExiste(jogoNome,listaDeJogos) === true){
-            
+        if (jogoExiste(jogoNome, listaDeJogos) === true) {
+
             // adicionando os dados em um objeto no array
             listaDeJogos.push({
                 jogo,
-                horas : horasJogadas,
+                horas: horasJogadas,
                 plataforma,
-                id : listaDeJogos.length
+                id: listaDeJogos.length
             })
-            
+
             // chamada de função
             salvarJogos(listaDeJogos)
             mostrarJogos(listaDeJogos);
             limparInputs()
-            
+
         }
-        
-        console.log(listaDeJogos);// debug
-        
+
+
+
     }
-    
+
     /*
     como deve ficar o objeto futuramente :
     
@@ -79,54 +81,70 @@ function adicionarDados(){
 
 
 // função para limpar inputs
-function limparInputs(){
+function limparInputs() {
     jogoInput.value = ''
     horasInput.value = ''
-    selectPlataforma.value = 'selection' ;
+    selectPlataforma.value = 'selection';
 }
 
 
 // função que exibe o nome do usuário salvo no localStorage
-function user(){
-    if(usernameString === null ){
+function user() {
+    if (usernameString === null) {
         return false
-    }else{
+    } else {
         return true
     }
 }
 // função para exibir o usuário
-function exibrUser(){
-    if(user()){
+function exibrUser() {
+    if (user()) {
         const UserName = JSON.parse(usernameString);
         UserNameInfo.textContent = ` ${UserName.nome} `
-    }else{
+    } else {
         UserNameInfo.textContent = `none user`
     }
 }
 
 
 
+async function inicializarJogos() {
+    try {
+        const jogos = await listarJogos();
+
+        listaDeJogos = jogos;
+
+        mostrarJogos(listaDeJogos);
+
+    } catch (error) {
+        console.error("Erro ao inicializar os jogos:", error);
+    }
+}
+inicializarJogos()
+
 
 // EVENTOS DO CÓDIGO
 exibrUser() // chamada da função para exibir o username
 
 // evento quando o botão adicionar for clicado 
-btn.addEventListener('click', ()=>{
+btn.addEventListener('click', () => {
     adicionarDados(); // chamada de função
 });
 
 // evento enquanto o usário estiver digitando 
-pesquisaInput.addEventListener('input', ()=>{
+pesquisaInput.addEventListener('input', () => {
     pesquisar(pesquisaInput, listaDeJogos, mensagem)
 });
 
-// quando reiniciar 
-window.addEventListener('load', function(event) {
-    // mostrar os jogos que já estão em listaDeJogos
-    mostrarJogos(listaDeJogos)
-    console.log("Página carregou");
-}); 
 
-btnEditar.addEventListener('click', ()=>{
-    editarGame(listaDeJogos)
-})
+// // quando reiniciar 
+// window.addEventListener('load', function (event) {
+//     // mostrar os jogos que já estão em listaDeJogos
+//     mostrarJogos(listaDeJogos)
+//     console.log("Página carregou");
+// });
+
+// btnEditar.addEventListener('click', () => {
+//     editarGame(listaDeJogos)
+// })
+

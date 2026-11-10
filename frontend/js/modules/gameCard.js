@@ -1,6 +1,6 @@
 // função para criar os cards dos jogos
 export function criarCard(jogo) {
-    console.log("criando", jogo.jogo);
+    console.log("criando", jogo.nome);
 
     // função auxiliar 
     function dadosChild(dados) {
