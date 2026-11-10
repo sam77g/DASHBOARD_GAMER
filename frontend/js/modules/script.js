@@ -36,6 +36,7 @@ async function adicionarDados() {
     const plataforma = selectPlataforma.options[selectPlataforma.selectedIndex].text;
     const jogoNome = jogo.trim().toLowerCase()
 
+
     //  validação 
     // verifica se o usuário digitou o nome e as horas jogadas, além de verificar o valor do select
     if (validar(jogo, horasJogadas, valorSelect, listaDeJogos) == true) {
@@ -78,6 +79,7 @@ function user() {
         return true
     }
 }
+
 // função para exibir o usuário
 function exibrUser() {
     if (user()) {
@@ -103,18 +105,46 @@ async function inicializarJogos() {
     }
 }
 
+async function salvarEdicao() {
+
+    const novosDados = {
+        nome: jogoInput.value,
+        horas_jogadas: Number(horasInput.value),
+        plataforma: selectPlataforma.options[
+            selectPlataforma.selectedIndex
+        ].text
+    };
+
+    await atualizarJogo(jogoEmEdicao, novosDados);
+
+    // Atualizar os dados locais consultando a API
+    listaDeJogos = await listarJogos();
+
+    // Atualizar os cards na tela
+    mostrarJogos(listaDeJogos);
+
+    // Limpar o formulário
+    limparInputs();
+
+    // Sair do modo de edição
+    jogoEmEdicao = null;
+
+}
+
 
 
 // EVENTOS DO CÓDIGO
 exibrUser() // chamada da função para exibir o username
 
 // evento quando o botão adicionar for clicado 
-btn.addEventListener('click', () => {
-    if (jogoEmEdicao == null || false) {
-        adicionarDados(); // chamada de função
+btn.addEventListener('click', async () => {
+
+    if (jogoEmEdicao === null) {
+        await adicionarDados();
     } else {
-        atualizarJogo()
+        await salvarEdicao();
     }
+
 });
 
 // evento enquanto o usário estiver digitando 
@@ -129,22 +159,30 @@ window.addEventListener('load', function (event) {
     inicializarJogos()
 });
 
+
 lista.addEventListener("click", (event) => {
 
-    if (event.target.classList.contains("editarBtn")) {
+    const botaoEditar = event.target.closest(".editarBtn");
 
-        const id = Number(event.target.dataset.id);
+    if (!botaoEditar) return;
 
-        editarGame(
-            listaDeJogos,
-            id,
-            horasInput,
-            jogoInput,
-            selectPlataforma
-        );
+    const id = Number(botaoEditar.dataset.id);
 
-        jogoEmEdicao = true
+    const editando = editarGame(
+        listaDeJogos,
+        id,
+        horasInput,
+        jogoInput,
+        selectPlataforma
+    );
+
+    if (editando) {
+        jogoEmEdicao = id;
+        console.log("Editando jogo:", jogoEmEdicao);
     }
 
+
+
 });
+
 
