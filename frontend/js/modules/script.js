@@ -4,6 +4,7 @@ import { jogoExiste, validar } from "../utils/validar.js"; // função de valida
 import { salvarJogos } from "./storage.js"; // função de salvar e carregar os jogos
 import { pesquisar } from "./pesquisar.js";
 import { cadastrarJogo, listarJogos, atualizarJogo } from "../api/jogosApi.js";
+import { editarGame } from "./editGame.js"
 
 // Variavéis
 // DOM ELEMENTS
@@ -16,6 +17,7 @@ const jogoInput = document.querySelector("#nomeDoJogo");
 const horasInput = document.querySelector("#horas");
 const selectPlataforma = document.querySelector('#plataforma');
 const mensagem = document.querySelector('#mensagem'); // mensagem da lista enquanto digita
+let jogoEmEdicao = null;
 // DADOS
 const usernameString = localStorage.getItem('user');
 
@@ -108,7 +110,11 @@ exibrUser() // chamada da função para exibir o username
 
 // evento quando o botão adicionar for clicado 
 btn.addEventListener('click', () => {
-    adicionarDados(); // chamada de função
+    if (jogoEmEdicao == null || false) {
+        adicionarDados(); // chamada de função
+    } else {
+        atualizarJogo()
+    }
 });
 
 // evento enquanto o usário estiver digitando 
@@ -124,10 +130,21 @@ window.addEventListener('load', function (event) {
 });
 
 lista.addEventListener("click", (event) => {
-    if (event.target.id === "editarBtn") {
-        alert("botão editar clicado")
-        let BtnEditar = event.target.dataset
-        console.log(BtnEditar)
+
+    if (event.target.classList.contains("editarBtn")) {
+
+        const id = Number(event.target.dataset.id);
+
+        editarGame(
+            listaDeJogos,
+            id,
+            horasInput,
+            jogoInput,
+            selectPlataforma
+        );
+
+        jogoEmEdicao = true
     }
+
 });
 
