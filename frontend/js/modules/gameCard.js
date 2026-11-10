@@ -38,6 +38,7 @@ export function criarCard(jogo) {
 
     editarBtn.textContent = 'Editar';
     editarBtn.className = 'editarBtn';
+    editarBtn.id = 'editarBtn'
     editarBtn.dataset.id = jogo.id;  // "salva" o id do jogo no botão
     dadosChild(editarBtn);
 

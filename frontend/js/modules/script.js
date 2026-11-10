@@ -1,11 +1,9 @@
 // imports
 import { mostrarJogos } from "./mostrarJogos.js";
-import { editarGame } from "./editGame.js";
 import { jogoExiste, validar } from "../utils/validar.js"; // função de validação
-import { carregarJogos, salvarJogos } from "./storage.js"; // função de salvar e carregar os jogos
-import { criarCard } from "./gameCard.js"; // função para criar os cards dos jogos
+import { salvarJogos } from "./storage.js"; // função de salvar e carregar os jogos
 import { pesquisar } from "./pesquisar.js";
-import { cadastrarJogo, listarJogos } from "../api/jogosApi.js";
+import { cadastrarJogo, listarJogos, atualizarJogo } from "../api/jogosApi.js";
 
 // Variavéis
 // DOM ELEMENTS
@@ -17,9 +15,7 @@ const UserNameInfo = document.querySelector("#usernameInfo");
 const jogoInput = document.querySelector("#nomeDoJogo");
 const horasInput = document.querySelector("#horas");
 const selectPlataforma = document.querySelector('#plataforma');
-const lista = document.querySelector('#lista'); // lista de jogos 
 const mensagem = document.querySelector('#mensagem'); // mensagem da lista enquanto digita
-let jogoEmEdicao = null;
 // DADOS
 const usernameString = localStorage.getItem('user');
 
@@ -42,14 +38,7 @@ async function adicionarDados() {
     // verifica se o usuário digitou o nome e as horas jogadas, além de verificar o valor do select
     if (validar(jogo, horasJogadas, valorSelect, listaDeJogos) == true) {
         // verifica se o jogo já foi adicionado
-        if (jogoExiste(jogoNome, listaDeJogos) === true) {
-
-            // adicionando os dados em um objeto no array
-            listaDeJogos.push({
-                nome: jogo,
-                horas_jogadas: horasJogadas,
-                plataforma,
-            })
+        if (jogoExiste(jogoNome, listaDeJogos) === false) {
 
             // chamada de função
             await cadastrarJogo({
@@ -111,7 +100,7 @@ async function inicializarJogos() {
         console.error("Erro ao inicializar os jogos:", error);
     }
 }
-inicializarJogos()
+
 
 
 // EVENTOS DO CÓDIGO
@@ -128,14 +117,17 @@ pesquisaInput.addEventListener('input', () => {
 });
 
 
-// // quando reiniciar 
-// window.addEventListener('load', function (event) {
-//     // mostrar os jogos que já estão em listaDeJogos
-//     mostrarJogos(listaDeJogos)
-//     console.log("Página carregou");
-// });
+// quando reiniciar 
+window.addEventListener('load', function (event) {
+    // mostrar os jogos que já estão em listaDeJogos
+    inicializarJogos()
+});
 
-// btnEditar.addEventListener('click', () => {
-//     editarGame(listaDeJogos)
-// })
+lista.addEventListener("click", (event) => {
+    if (event.target.id === "editarBtn") {
+        alert("botão editar clicado")
+        let BtnEditar = event.target.dataset
+        console.log(BtnEditar)
+    }
+});
 

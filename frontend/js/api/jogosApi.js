@@ -42,4 +42,27 @@ export async function cadastrarJogo(jogo) {
     }
 }
 
+export async function atualizarJogo() {
+    try {
+        const response = await fetch(`http://localhost:3000/api/jogos/${id}`, {
+            method: "PUT", // informa o método
+            headers: {
+                "Content-Type": "application/json" // informa o tipo 
+            },
+            body: JSON.stringify(jogo) // converte o objeto para JSON
+        });
+
+        if (!response.ok) {
+            throw new Error("Erro ao consultar a API");
+        }
+
+        const resultado = await response.json();
+
+        return resultado
+
+    } catch (error) {
+        console.error("Erro ao atualizar o jogo :", error);
+        throw error;
+    }
+}
 
