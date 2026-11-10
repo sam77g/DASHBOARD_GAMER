@@ -76,13 +76,13 @@ export async function deletarJogo(id) {
         })
 
         if (response.ok) {
-            console.error("Jogo deletado com sucesso")
+            console.log("Jogo deletado com sucesso")
         } else {
             throw new Error("Erro ao consultar a API");
         }
 
     } catch (error) {
-        console.error("Erro ao listar jogos:", error);
+        console.error("Erro ao deletar jogo:", error);
         throw error;
     }
 }
