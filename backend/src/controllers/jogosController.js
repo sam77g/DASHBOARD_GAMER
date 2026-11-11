@@ -51,6 +51,11 @@ async function listarJogos(req, res) {
 
 async function cadastrarJogo(req, res) {
     try {
+        if (!Array.isArray(req.body) || req.body === null || !(value === 'object' && value !== null)) {
+            return res.status(400).json({
+                mensagem: "Corpo da requisição inválido"
+            });
+        }
         let { nome, horas_jogadas, plataforma } = req.body
         let parametros = [];
 
@@ -59,19 +64,19 @@ async function cadastrarJogo(req, res) {
                 mensagem: "Dados inválidos"
             })
         }
-        else {
-            parametros.push(nome, horas_jogadas, plataforma)
 
-            const [resultado] = await database.execute(
-                "INSERT INTO jogos (nome, horas_jogadas, plataforma) VALUES (?,?,?)",
-                parametros
-            );
+        parametros.push(nome.trim(), horas_jogadas, plataforma.trim())
 
-            res.status(201).json({
-                mensagem: "Jogo cadastrado com sucesso",
-                id: resultado.insertId
-            })
-        }
+        const [resultado] = await database.execute(
+            "INSERT INTO jogos (nome, horas_jogadas, plataforma) VALUES (?,?,?)",
+            parametros
+        );
+
+        res.status(201).json({
+            mensagem: "Jogo cadastrado com sucesso",
+            id: resultado.insertId
+        })
+
 
     } catch (error) {
         console.error("Erro ao cadastrar o jogo:", error);
@@ -118,36 +123,31 @@ async function editarJogo(req, res) {
                 mensagem: "Dados inválidos"
             })
         }
-        else {
-            parametros.push(nome, horas_jogadas, plataforma, id)
 
-            const [resultadoId] = await database.execute(
-                "SELECT * FROM jogos WHERE id = ?",
-                [id]
-            );
+        parametros.push(nome.trim(), horas_jogadas, plataforma.trim(), id)
 
-            // verifica se o [resultado] está vazio, se está significa que não há nenhum com o id solicitado
-            if (resultadoId.length === 0) {
-                return res.status(404).json({
-                    mensagem: "Jogo não encontrado"
-                });
-            }
+        const [resultadoId] = await database.execute(
+            "SELECT * FROM jogos WHERE id = ?",
+            [id]
+        );
 
-            const [resultado] = await database.execute(
-                "UPDATE jogos SET nome = ?, horas_jogadas = ?, plataforma = ? WHERE id = ?",
-                parametros
-            );
-
-            res.status(200).json({
-                mensagem: "Jogo alterado com sucesso !",
-                id: id,
-                jogo: nome
-            })
-
+        // verifica se o [resultado] está vazio, se está significa que não há nenhum com o id solicitado
+        if (resultadoId.length === 0) {
+            return res.status(404).json({
+                mensagem: "Jogo não encontrado"
+            });
         }
 
+        const [resultado] = await database.execute(
+            "UPDATE jogos SET nome = ?, horas_jogadas = ?, plataforma = ? WHERE id = ?",
+            parametros
+        );
 
-
+        res.status(200).json({
+            mensagem: "Jogo alterado com sucesso !",
+            id: id,
+            jogo: nome
+        })
 
     } catch (error) {
         console.error("Erro ao alterar o jogo:", error);
@@ -208,7 +208,7 @@ function validarValoresRecebidos(nome, horas_jogadas, plataforma) {
     if (isEmpty(nome)) {
         return false
     }
-    else if (nome.length > 120) {
+    else if (nome.trim().length > 120) {
         return false
     }
     else if (!Number.isFinite(horas_jogadas)) {
@@ -217,10 +217,10 @@ function validarValoresRecebidos(nome, horas_jogadas, plataforma) {
     else if (horas_jogadas < 0) {
         return false
     }
-    else if (plataforma === 'selection') {
+    else if (isEmpty(plataforma) || plataforma.trim().length > 50) {
         return false
     }
-    else if (isEmpty(plataforma) || plataforma.length > 50) {
+    else if (plataforma.trim() === 'selection') {
         return false
     }
     else {
