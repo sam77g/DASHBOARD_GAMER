@@ -10,19 +10,14 @@ export function validar(game, horas, select) {
         return false
     }
 
-    if (game.trim() === '') {
-        // alerta caso o usário não tenha digitado os nomes
-        window.alert('digite o nome do jogo e/ou horas jogadas válidos !! ');
+    if (!Number.isFinite(horas)) {
+        window.alert('Horas inválidas ');
         return false
-
     } else if (horas < 0) {
         window.alert('Digite horas válidas!! ');
         return false
 
-    } else if (!Number.isFinite(horas)) {
-        window.alert('Horas inválidas ');
-        return false
-    } else if (select === 'selection' || select.trim() === '') {
+    } else if (select === 'selection') {
         // alerta caso o usuário não tenha selecionado a plataforma
         window.alert('selecione a plataforma !!');
         return false
