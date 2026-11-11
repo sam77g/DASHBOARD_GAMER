@@ -1,9 +1,8 @@
 // imports
 import { mostrarJogos } from "./mostrarJogos.js";
 import { jogoExiste, validar } from "../utils/validar.js"; // função de validação
-import { salvarJogos } from "./storage.js"; // função de salvar e carregar os jogos
 import { pesquisar } from "./pesquisar.js";
-import { cadastrarJogo, listarJogos, atualizarJogo } from "../api/jogosApi.js";
+import { cadastrarJogo, listarJogos, atualizarJogo, deletarJogo } from "../api/jogosApi.js";
 import { editarGame } from "./editGame.js"
 
 // Variavéis
@@ -39,25 +38,33 @@ async function adicionarDados() {
 
     //  validação 
     // verifica se o usuário digitou o nome e as horas jogadas, além de verificar o valor do select
+
     if (validar(jogo, horasJogadas, valorSelect, listaDeJogos) == true) {
-        // verifica se o jogo já foi adicionado
+
         if (jogoExiste(jogoNome, listaDeJogos) === false) {
 
-            // chamada de função
-            await cadastrarJogo({
-                nome: jogo,
-                horas_jogadas: horasJogadas,
-                plataforma,
-            })
-            salvarJogos(listaDeJogos)
-            mostrarJogos(listaDeJogos);
-            limparInputs()
+            try {
+                console.log("Dados enviados:", {
+                    nome: jogo,
+                    horas_jogadas: horasJogadas,
+                    plataforma
+                });
 
+                await cadastrarJogo({
+                    nome: jogo,
+                    horas_jogadas: horasJogadas,
+                    plataforma
+                });
+
+                await resetarTela();
+
+            } catch (error) {
+                console.error("Falha no processo de cadastro:", error);
+                alert(`Não foi possível cadastrar o jogo: ${error.message}`);
+            }
         }
-
-
-
     }
+
 
 }
 
@@ -117,14 +124,7 @@ async function salvarEdicao() {
 
     await atualizarJogo(jogoEmEdicao, novosDados);
 
-    // Atualizar os dados locais consultando a API
-    listaDeJogos = await listarJogos();
-
-    // Atualizar os cards na tela
-    mostrarJogos(listaDeJogos);
-
-    // Limpar o formulário
-    limparInputs();
+    resetarTela();
 
     // Sair do modo de edição
     jogoEmEdicao = null;
@@ -184,5 +184,38 @@ lista.addEventListener("click", (event) => {
 
 
 });
+
+
+lista.addEventListener("click", async (event) => {
+    const botaoDelete = event.target.closest(".excluirBtn");
+
+    if (!botaoDelete) return;
+
+    const id = Number(botaoDelete.dataset.id);
+
+    const confirmar = confirm("Deseja realmente excluir este jogo?");
+
+    if (!confirmar) return;
+    try {
+        await deletarJogo(id);
+        await resetarTela();
+
+    } catch (error) {
+        console.error("Não foi possível excluir o jogo:", error);
+        alert("Erro ao excluir o jogo.");
+    }
+
+})
+
+async function resetarTela() {
+    // Atualizar os dados locais consultando a API
+    listaDeJogos = await listarJogos();
+
+    // Atualizar os cards na tela
+    mostrarJogos(listaDeJogos);
+
+    // Limpar o formulário
+    limparInputs();
+}
 
 

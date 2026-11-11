@@ -18,26 +18,41 @@ export async function listarJogos() {
     }
 }
 
+
 export async function cadastrarJogo(jogo) {
     try {
         const response = await fetch("http://localhost:3000/api/jogos", {
-            method: "POST", // informa o método
+            method: "POST",
             headers: {
-                "Content-Type": "application/json" // informa o tipo 
+                "Content-Type": "application/json"
             },
-            body: JSON.stringify(jogo) // converte o objeto para JSON
+            body: JSON.stringify(jogo)
         });
 
-        if (!response.ok) {
-            throw new Error("Erro ao consultar a API");
+        // Captura a resposta do backend, mesmo quando ocorre um erro
+        const resposta = await response.text();
+
+        let resultado;
+
+        try {
+            resultado = JSON.parse(resposta);
+        } catch {
+            resultado = resposta;
         }
 
-        const resultado = await response.json();
+        // Exibe o status HTTP e a mensagem real do backend
+        if (!response.ok) {
+            throw new Error(
+                `HTTP ${response.status}: ${JSON.stringify(resultado)}`
+            );
+        }
 
-        return resultado
+        console.log("Jogo cadastrado:", resultado);
+
+        return resultado;
 
     } catch (error) {
-        console.error("Erro ao cadastrar o jogo :", error);
+        console.error("Erro ao cadastrar jogo:", error);
         throw error;
     }
 }
@@ -70,16 +85,13 @@ export async function deletarJogo(id) {
     try {
         const response = await fetch(`http://localhost:3000/api/jogos/${id}`, {
             method: "DELETE", // informa o método
-            headers: {
-                "Content-Type": "application/json" // informa o tipo 
-            }
         })
 
-        if (response.ok) {
-            console.log("Jogo deletado com sucesso")
-        } else {
-            throw new Error("Erro ao consultar a API");
+        if (!response.ok) {
+            throw new Error("Erro ao deletar o jogo");
         }
+
+        console.log("Jogo deletado com sucesso");
 
     } catch (error) {
         console.error("Erro ao deletar jogo:", error);
