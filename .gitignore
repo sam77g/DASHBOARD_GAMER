@@ -40,6 +40,7 @@ cypress/videos/
 cypress/screenshots/
 
 # IDEs & Editors
+.vscode
 .vscode/*
 !.vscode/extensions.json
 !.vscode/settings.json
