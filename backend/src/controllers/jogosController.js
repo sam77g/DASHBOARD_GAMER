@@ -54,19 +54,24 @@ async function cadastrarJogo(req, res) {
         let { nome, horas_jogadas, plataforma } = req.body
         let parametros = [];
 
-        if (validarValoresRecebidos(nome, horas_jogadas, plataforma)) {
-            parametros.push(nome, horas_jogadas, plataforma)
+        if (!validarValoresRecebidos(nome, horas_jogadas, plataforma)) {
+            return res.status(400).json({
+                mensagem: "Dados inválidos"
+            })
         }
+        else {
+            parametros.push(nome, horas_jogadas, plataforma)
 
-        const [resultado] = await database.execute(
-            "INSERT INTO jogos (nome, horas_jogadas, plataforma) VALUES (?,?,?)",
-            parametros
-        );
+            const [resultado] = await database.execute(
+                "INSERT INTO jogos (nome, horas_jogadas, plataforma) VALUES (?,?,?)",
+                parametros
+            );
 
-        res.status(201).json({
-            mensagem: "Jogo cadastrado com sucesso",
-            id: resultado.insertId
-        })
+            res.status(201).json({
+                mensagem: "Jogo cadastrado com sucesso",
+                id: resultado.insertId
+            })
+        }
 
     } catch (error) {
         console.error("Erro ao cadastrar o jogo:", error);
@@ -108,33 +113,41 @@ async function editarJogo(req, res) {
         let { nome, horas_jogadas, plataforma } = req.body
         let parametros = [];
 
-        if (validarValoresRecebidos(nome, horas_jogadas, plataforma)) {
+        if (!validarValoresRecebidos(nome, horas_jogadas, plataforma)) {
+            return res.status(400).json({
+                mensagem: "Dados inválidos"
+            })
+        }
+        else {
             parametros.push(nome, horas_jogadas, plataforma, id)
+
+            const [resultadoId] = await database.execute(
+                "SELECT * FROM jogos WHERE id = ?",
+                [id]
+            );
+
+            // verifica se o [resultado] está vazio, se está significa que não há nenhum com o id solicitado
+            if (resultadoId.length === 0) {
+                return res.status(404).json({
+                    mensagem: "Jogo não encontrado"
+                });
+            }
+
+            const [resultado] = await database.execute(
+                "UPDATE jogos SET nome = ?, horas_jogadas = ?, plataforma = ? WHERE id = ?",
+                parametros
+            );
+
+            res.status(200).json({
+                mensagem: "Jogo alterado com sucesso !",
+                id: id,
+                jogo: nome
+            })
+
         }
 
-        const [resultadoId] = await database.execute(
-            "SELECT * FROM jogos WHERE id = ?",
-            [id]
-        );
-
-        // verifica se o [resultado] está vazio, se está significa que não há nenhum com o id solicitado
-        if (resultadoId.length === 0) {
-            return res.status(404).json({
-                mensagem: "Jogo não encontrado"
-            });
-        }
 
 
-        const [resultado] = await database.execute(
-            "UPDATE jogos SET nome = ?, horas_jogadas = ?, plataforma = ? WHERE id = ?",
-            parametros
-        );
-
-        res.status(200).json({
-            mensagem: "Jogo alterado com sucesso !",
-            id: resultado.insertId,
-            jogo: nome
-        })
 
     } catch (error) {
         console.error("Erro ao alterar o jogo:", error);
@@ -187,22 +200,28 @@ function isEmpty(str) {
     return typeof str !== 'string' || str.trim() === '';
 }
 
-function validarValoresRecebidos(nome, select, horas_jogadas) {
-    if (typeof nome !== 'string') return res.status(400).json({ mensagem: "tipo do nome inválido !" })
-    if (typeof select !== 'string') return res.status(400).json({ mensagem: "tipo do select inválido !" })
-    if (typeof horas_jogadas !== 'number') return res.status(400).json({ mensagem: "tipo das horas jogadas inválida ! " })
+function validarValoresRecebidos(nome, horas_jogadas, plataforma) {
+    if (typeof nome !== 'string') return false
+    if (typeof plataforma !== 'string') return false
+    if (typeof horas_jogadas !== 'number') return false
 
     if (isEmpty(nome)) {
-        return res.status(400).json({ mensagem: "nome inválido !" })
+        return false
     }
-    else if (typeof horas_jogadas !== "number" || !Number.isFinite(horas_jogadas)) {
-        return res.status(400).json({ mensagem: "Horas inválidas !" })
+    else if (nome.length > 120) {
+        return false
+    }
+    else if (!Number.isFinite(horas_jogadas)) {
+        return false
     }
     else if (horas_jogadas < 0) {
-        return res.status(400).json({ mensagem: "nome ,horas e plataforma vazias/inválidas" })
+        return false
     }
-    else if (isEmpty(plataforma)) {
-        return res.status(400).json({ mensagem: "plataforma inválida !" })
+    else if (plataforma === 'selection') {
+        return false
+    }
+    else if (isEmpty(plataforma) || plataforma.length > 50) {
+        return false
     }
     else {
         return true
