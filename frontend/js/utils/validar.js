@@ -1,11 +1,28 @@
 // função de validação
 export function validar(game, horas, select) {
-    if (game.trim() === '' || horas <= 0) {
+
+    if (typeof game !== 'string') return false
+    if (typeof select !== 'string') return false
+    if (typeof horas !== 'number') return false
+
+    if (isEmpty(game) || isEmpty(select)) {
+        window.alert("valores vazios são inválidos")
+        return false
+    }
+
+    if (game.trim() === '') {
         // alerta caso o usário não tenha digitado os nomes
-        window.alert('digite o nome do jogo e/ou horas jogadas !! ');
+        window.alert('digite o nome do jogo e/ou horas jogadas válidos !! ');
         return false
 
-    } else if (select == 'selection') {
+    } else if (horas < 0) {
+        window.alert('Digite horas válidas!! ');
+        return false
+
+    } else if (!Number.isFinite(horas)) {
+        window.alert('Horas inválidas ');
+        return false
+    } else if (select === 'selection' || select.trim() === '') {
         // alerta caso o usuário não tenha selecionado a plataforma
         window.alert('selecione a plataforma !!');
         return false
@@ -13,6 +30,10 @@ export function validar(game, horas, select) {
     } else {
         return true
     }
+}
+
+function isEmpty(str) {
+    return typeof str !== 'string' || str.trim() === '';
 }
 
 export function jogoExiste(nome, array) {
@@ -29,3 +50,4 @@ export function jogoExiste(nome, array) {
         return true
     }
 }
+

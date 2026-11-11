@@ -27,42 +27,41 @@ let listaDeJogos = [];
 
 // funções
 async function adicionarDados() {
-
+    
     // DOM ELEMENTS 
     const valorSelect = String(selectPlataforma.value)
     const jogo = jogoInput.value;
     const horasJogadas = Number(horasInput.value)
     const plataforma = selectPlataforma.options[selectPlataforma.selectedIndex].text;
     const jogoNome = jogo.trim().toLowerCase()
-
-
+        
     //  validação 
     // verifica se o usuário digitou o nome e as horas jogadas, além de verificar o valor do select
+    const resultadoValidacao = validar(
+        jogo,
+        horasJogadas,
+        valorSelect,
+        listaDeJogos
+    );
 
-    if (validar(jogo, horasJogadas, valorSelect, listaDeJogos) == true) {
 
-        if (jogoExiste(jogoNome, listaDeJogos) === false) {
+    // 2. Testar duplicidade
+    if (resultadoValidacao === true) {
 
-            try {
-                console.log("Dados enviados:", {
-                    nome: jogo,
-                    horas_jogadas: horasJogadas,
-                    plataforma
-                });
-
-                await cadastrarJogo({
-                    nome: jogo,
-                    horas_jogadas: horasJogadas,
-                    plataforma
-                });
-
-                await resetarTela();
-
-            } catch (error) {
-                console.error("Falha no processo de cadastro:", error);
-                alert(`Não foi possível cadastrar o jogo: ${error.message}`);
-            }
+        const resultadoDuplicidade = jogoExiste(jogoNome, listaDeJogos);
+        if (resultadoDuplicidade === false) {
+            console.log("O jogo já existe. Cadastro interrompido.");
+            return;
         }
+
+        await cadastrarJogo({
+            nome: jogo,
+            horas_jogadas: horasJogadas,
+            plataforma
+        });
+
+
+        await resetarTela();
     }
 
 
@@ -124,7 +123,7 @@ async function salvarEdicao() {
 
     await atualizarJogo(jogoEmEdicao, novosDados);
 
-    resetarTela();
+    await resetarTela();
 
     // Sair do modo de edição
     jogoEmEdicao = null;
@@ -138,7 +137,6 @@ exibrUser() // chamada da função para exibir o username
 
 // evento quando o botão adicionar for clicado 
 btn.addEventListener('click', async () => {
-
     if (jogoEmEdicao === null) {
         await adicionarDados();
     } else {
