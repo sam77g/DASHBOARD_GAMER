@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,12 +8,15 @@
     <link rel="stylesheet" type='text/css' href="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/devicon.min.css" />
     <link rel="stylesheet" href="../assets/css/style.css">
 </head>
+
 <body>
     <!-- GUIA : -->
     <!-- https://css-tricks.com/snippets/css/a-guide-to-flexbox/ -->
-    <header><h1>DASHBOARD GAMER 🎮</h1></header>
+    <header>
+        <h1>DASHBOARD GAMER 🎮</h1>
+    </header>
     <article>
-        
+
         <main>
             <!-- perfil do jogador -->
             <section class="perfil" id="perfil">
@@ -23,8 +27,8 @@
                     <p>level</p>
                 </div>
                 <div class="conteudoPerfil">
-                    
-                    
+
+
                     <div class="formulario" id="formulario">
                         <!-- campos  -->
                         <div class="campo">
@@ -34,31 +38,64 @@
 
                         <div class="campo">
                             <label for="horas">Horas Jogadas</label>
-                            <input type="number" id="horas" placeholder="Horas jogadas" >
+                            <input type="number" id="horas" placeholder="Horas jogadas">
                         </div>
 
 
                         <div class="campo">
                             <label for="plataforma">Plataforma</label>
-                            <select name="" id="plataforma">
+                            <select name="plataforma" id="plataforma">
                                 <option value="selection">Selecione a plataforma</option>
+
+                                <!-- PlayStation -->
                                 <option value="ps1">PS1</option>
                                 <option value="ps2">PS2</option>
                                 <option value="ps3">PS3</option>
                                 <option value="ps4">PS4</option>
+                                <option value="ps5">PS5</option>
                                 <option value="psp">PSP</option>
                                 <option value="psVita">PS VITA</option>
-                                <option value="pc">PC</option>
-                                <option value="xbox">XBOX</option>
+
+                                <!-- Xbox -->
+                                <option value="xbox">XBOX Classic</option>
                                 <option value="xbox_360">XBOX 360</option>
-                                <option value="xbox_One">XOBX ONE</option>
-                                <option value="xbox_series">XBOX SERIES</option>
+                                <option value="xbox_one">XBOX ONE</option>
+                                <option value="xbox_series">XBOX SERIES S/X</option>
+
+                                <!-- PC & Computadores -->
+                                <option value="pc">PC (Windows)</option>
+                                <option value="mac">Mac</option>
+                                <option value="linux">Linux</option>
+
+                                <!-- Nintendo -->
+                                <option value="nes">NES (Nintendinho)</option>
+                                <option value="snes">SNES (Super Nintendo)</option>
+                                <option value="n64">Nintendo 64</option>
+                                <option value="gamecube">GameCube</option>
+                                <option value="wii">Wii</option>
+                                <option value="wii_u">Wii U</option>
+                                <option value="gameboy">Game Boy</option>
+                                <option value="gba">Game Boy Advance</option>
+                                <option value="ds">Nintendo DS</option>
+                                <option value="3ds">Nintendo 3DS</option>
                                 <option value="switch">N. SWITCH</option>
                                 <option value="switch_2">N. SWITCH 2</option>
+
+                                <!-- Sega -->
+                                <option value="master_system">Master System</option>
+                                <option value="mega_drive">Mega Drive / Genesis</option>
+                                <option value="sega_saturn">Sega Saturn</option>
+                                <option value="dreamcast">Dreamcast</option>
+                                <option value="game_gear">Game Gear</option>
+
+                                <!-- Outros / Retro / Mobile -->
+                                <option value="atari_2600">Atari 2600</option>
+                                <option value="neogeo">Neo Geo</option>
+                                <option value="android">Android</option>
+                                <option value="ios">iOS</option>
+                                <option value="arcade">Arcade / Fliperama</option>
                             </select>
-
                         </div>
-
                         <!-- botão -->
                         <button id="btn">ADICIONAR</button>
                     </div>
@@ -77,7 +114,7 @@
                 </div>
 
                 <label for="pesquisaInput">Pesquisar</label>
-                <div class="campo" id="pesquisaCampo" >
+                <div class="campo" id="pesquisaCampo">
                     <input type="text" id="pesquisaInput">
                 </div>
 
@@ -91,14 +128,15 @@
     </article>
 
     <footer>&copy;sam77g
-    <a href="https://github.com/sam77g" target="_blank"> 
+        <a href="https://github.com/sam77g" target="_blank">
             <i class="devicon-github-original"></i>
-    </a>
-    <a href="https://linkedin.com/in/samuel-santana-assis" target="_blank"> 
-        <i class="devicon-linkedin-plain"></i>
-    </a>
-    </footer> 
+        </a>
+        <a href="https://linkedin.com/in/samuel-santana-assis" target="_blank">
+            <i class="devicon-linkedin-plain"></i>
+        </a>
+    </footer>
 
     <script type="module" src="../js/modules/script.js"></script>
 </body>
+
 </html>
