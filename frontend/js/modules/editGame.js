@@ -1,4 +1,4 @@
-// editGame.js - Arquivo com a função de editar os jogos
+// frontend/js/editGame.js - Arquivo com a função de editar os jogos
 // funcionalidade não completada
 
 export function editarGame(array, id, horas, jogo, selectPlataforma) {
