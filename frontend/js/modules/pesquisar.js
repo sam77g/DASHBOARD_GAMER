@@ -8,7 +8,7 @@ export function pesquisar(pesquisaIn, array, mensagem){
     console.log(pesquisa)
     // filter para pegar o jogo digitado
     const jogoPesquisado =  array.filter(function(jogo){
-            return jogo.jogo.toLowerCase().includes(pesquisa);
+        return jogo.nome.toLowerCase().includes(pesquisa);
     });
 
     console.log(jogoPesquisado);

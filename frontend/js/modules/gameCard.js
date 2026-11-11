@@ -1,6 +1,7 @@
+// gameCard.js
 // função para criar os cards dos jogos
 export function criarCard(jogo) {
-    console.log("criando", jogo.jogo);
+    console.log("criando", jogo.nome);
 
     // função auxiliar 
     function dadosChild(dados) {
@@ -22,11 +23,11 @@ export function criarCard(jogo) {
     gameCard.appendChild(dadosGame);
 
     let titulo = criarTitulo();
-    titulo.textContent = `${jogo.jogo}`;
+    titulo.textContent = `${jogo.nome}`;
     dadosChild(titulo);
 
     let horasJogo = criarParagrafo();
-    horasJogo.textContent = ` ${jogo.horas} horas`
+    horasJogo.textContent = ` ${jogo.horas_jogadas} horas`
     dadosChild(horasJogo);
 
     let plataformaJogo = criarParagrafo();
@@ -39,6 +40,13 @@ export function criarCard(jogo) {
     editarBtn.className = 'editarBtn';
     editarBtn.dataset.id = jogo.id;  // "salva" o id do jogo no botão
     dadosChild(editarBtn);
+
+    let excluirBtn = document.createElement('button');
+    excluirBtn.textContent = 'Excluir';
+    excluirBtn.className = 'excluirBtn';
+    excluirBtn.dataset.id = jogo.id;
+
+    dadosChild(excluirBtn);
 
     return gameCard; // elemento HTML do card
 

@@ -1,4 +1,4 @@
-// CONTROLLER
+// CONTROLLER - src/constrollers/jogosControler
 // FARÁ A CONEXÃO COM database.js
 // realizará as consultas SQL com node.js
 // req.query	Parâmetros de consulta	?plataforma=PC
@@ -54,10 +54,7 @@ async function cadastrarJogo(req, res) {
         let { nome, horas_jogadas, plataforma } = req.body
         let parametros = [];
 
-        // lembrar de impletar a verificação de nomes vazios
-        if ((!nome || nome.trim().toUpperCase() == '') || (typeof horas_jogadas !== "number" || !Number.isFinite(horas_jogadas) || horas_jogadas < 0) || !plataforma) {
-            return res.status(400).json({ mensagem: "nome ,horas e plataforma vazias/inválidas" })
-        } else {
+        if (validarValoresRecebidos(nome, horas_jogadas, plataforma)) {
             parametros.push(nome, horas_jogadas, plataforma)
         }
 
@@ -111,6 +108,10 @@ async function editarJogo(req, res) {
         let { nome, horas_jogadas, plataforma } = req.body
         let parametros = [];
 
+        if (validarValoresRecebidos(nome, horas_jogadas, plataforma)) {
+            parametros.push(nome, horas_jogadas, plataforma, id)
+        }
+
         const [resultadoId] = await database.execute(
             "SELECT * FROM jogos WHERE id = ?",
             [id]
@@ -121,14 +122,6 @@ async function editarJogo(req, res) {
             return res.status(404).json({
                 mensagem: "Jogo não encontrado"
             });
-        }
-
-
-        // lembrar de impletar a verificação de nomes vazios
-        if ((!nome || nome.trim().toUpperCase() == '') || (typeof horas_jogadas !== "number" || !Number.isFinite(horas_jogadas) || horas_jogadas < 0) || !plataforma) {
-            return res.status(400).json({ mensagem: "nome ,horas e plataforma vazias/inválidas" })
-        } else {
-            parametros.push(nome, horas_jogadas, plataforma, id)
         }
 
 
@@ -189,10 +182,39 @@ async function excluirJogo(req, res) {
 
 }
 
+
+function isEmpty(str) {
+    return typeof str !== 'string' || str.trim() === '';
+}
+
+function validarValoresRecebidos(nome, select, horas_jogadas) {
+    if (typeof nome !== 'string') return res.status(400).json({ mensagem: "tipo do nome inválido !" })
+    if (typeof select !== 'string') return res.status(400).json({ mensagem: "tipo do select inválido !" })
+    if (typeof horas_jogadas !== 'number') return res.status(400).json({ mensagem: "tipo das horas jogadas inválida ! " })
+
+    if (isEmpty(nome)) {
+        return res.status(400).json({ mensagem: "nome inválido !" })
+    }
+    else if (typeof horas_jogadas !== "number" || !Number.isFinite(horas_jogadas)) {
+        return res.status(400).json({ mensagem: "Horas inválidas !" })
+    }
+    else if (horas_jogadas < 0) {
+        return res.status(400).json({ mensagem: "nome ,horas e plataforma vazias/inválidas" })
+    }
+    else if (isEmpty(plataforma)) {
+        return res.status(400).json({ mensagem: "plataforma inválida !" })
+    }
+    else {
+        return true
+    }
+}
+
+
 module.exports = {
     listarJogos,
     cadastrarJogo,
     buscarJogoPorId,
     editarJogo,
-    excluirJogo
+    excluirJogo,
+    isEmpty
 };

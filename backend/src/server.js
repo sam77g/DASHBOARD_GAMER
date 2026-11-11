@@ -1,5 +1,6 @@
 // SERVIDOR 
 
+const cors = require("cors");
 const express = require("express"); // importa o express 
 const app = express();
 
@@ -7,6 +8,8 @@ const jogosRoutes = require("./routes/jogosRoutes"); // rotas
 
 // Middleware para interpretar JSON
 app.use(express.json());
+// Middleware do CORS
+app.use(cors());
 
 // Registrar as rotas de jogos
 // /api/jogos + /
