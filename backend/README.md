@@ -2,12 +2,14 @@
 
 # Dashboard Gamer — Backend
 
-**API REST em Node.js, Express e MySQL responsável por armazenar e gerenciar os jogos do Dashboard Gamer.**
+**API REST em Node.js, Express e MySQL (TiDB Cloud em produção), responsável por armazenar e gerenciar os jogos do Dashboard Gamer.**
 
 ![Status](https://img.shields.io/badge/status-em%20desenvolvimento-yellow)
 ![Node](https://img.shields.io/badge/Node.js-18%2B-339933?logo=node.js&logoColor=white)
 ![Express](https://img.shields.io/badge/Express-5-000000?logo=express&logoColor=white)
 ![MySQL](https://img.shields.io/badge/MySQL-mysql2-4479A1?logo=mysql&logoColor=white)
+![Deploy](https://img.shields.io/badge/deploy-Render-46E3B7?logo=render&logoColor=white)
+![Banco](https://img.shields.io/badge/banco-TiDB%20Cloud-FF7000)
 ![Licença](https://img.shields.io/badge/licen%C3%A7a-MIT-green)
 
 </div>
@@ -34,19 +36,22 @@
 
 ## 1. Sobre o Backend
 
-O backend do **Dashboard Gamer** é uma API REST que expõe operações de **CRUD** sobre a tabela de jogos, armazenada em **MySQL**.
+O backend do **Dashboard Gamer** é uma API REST que expõe operações de **CRUD** sobre a tabela de jogos, armazenada em **MySQL** (em produção, **TiDB Cloud**, compatível com MySQL).
 
-Ele é consumido pelo [frontend](../frontend/README.md) através de requisições `fetch` com JSON e roda por padrão em:
+Ele é consumido pelo [frontend](../frontend/README.md) através de requisições `fetch` com JSON. O frontend **nunca** acessa o banco diretamente: toda operação passa por esta API.
 
-```text
-http://localhost:3000
-```
+| Ambiente | URL da API | Observação |
+|---|---|---|
+| Local | `http://localhost:3000` | Porta definida por `PORT` (padrão `3000`) |
+| Produção | `https://dashboard-gamer.onrender.com` | Hospedado no **Render**, banco no **TiDB Cloud** (TLS) |
 
 Todas as rotas ficam sob o prefixo:
 
 ```text
 /api/jogos
 ```
+
+---
 
 ---
 
@@ -59,7 +64,9 @@ Todas as rotas ficam sob o prefixo:
 - Organizar o código em camadas (rotas, controllers, configuração);
 - Validar os dados recebidos antes de gravar no banco;
 - Retornar códigos HTTP e mensagens de erro coerentes;
-- Proteger credenciais com variáveis de ambiente.
+- Proteger credenciais com variáveis de ambiente;
+- Restringir o **CORS** às origens do frontend;
+- Publicar a API (Render) e conectá-la a um banco remoto com TLS (TiDB Cloud).
 
 ---
 
@@ -107,13 +114,13 @@ backend/
 
 | Arquivo | Responsabilidade |
 |---|---|
-| `server.js` | Cria o app Express, registra middlewares (`express.json`, `cors`), monta as rotas e inicia o servidor |
+| `server.js` | Cria o app Express, registra os middlewares (`cors` restrito às `origensPermitidas` e `express.json`), monta as rotas e inicia o servidor na porta `PORT` (padrão `3000`) |
 | `routes/jogosRoutes.js` | Mapeia método + caminho para a função do controller |
 | `controllers/jogosController.js` | Validação, consultas SQL e respostas HTTP |
-| `config/database.js` | Cria e exporta o pool de conexões MySQL |
+| `config/database.js` | Cria e exporta o pool de conexões MySQL, com TLS opcional (`DB_SSL=true`) para o TiDB Cloud |
 | `services/jogosService.js` | Reservado para regras de negócio (ainda vazio) |
 | `database/schema.sql` | Criação do banco `dashboardgamer` e da tabela `jogos` |
-| `.env.example` | Modelo das variáveis de ambiente |
+| `.env.example` | Modelo das variáveis de ambiente (`DB_*`, `DB_SSL`) |
 
 ### Fluxo entre camadas
 
@@ -121,7 +128,7 @@ backend/
 Requisição HTTP
       │
       ▼
-   server.js   (JSON + CORS)
+   server.js   (CORS + JSON)
       │
       ▼
  jogosRoutes   (método + caminho)
@@ -194,19 +201,21 @@ CREATE TABLE IF NOT EXISTS jogos (
 
 O pool é criado em `src/config/database.js` com as variáveis de ambiente:
 
-```text
-DB_HOST
-DB_PORT
-DB_USER
-DB_PASSWORD
-DB_NAME
-```
+| Variável | Descrição |
+|---|---|
+| `DB_HOST` | Host do banco (`localhost` ou o host do TiDB Cloud) |
+| `DB_PORT` | Porta (`3306` no MySQL local; o TiDB Cloud informa a porta no painel) |
+| `DB_USER` | Usuário |
+| `DB_PASSWORD` | Senha |
+| `DB_NAME` | Nome do banco (`dashboardgamer`) |
+| `DB_SSL` | `true` ativa a conexão TLS (`minVersion: TLSv1.2`), necessária no TiDB Cloud; `false` no MySQL local |
 
 ---
 
 ## 7. Endpoints
 
-URL base: `http://localhost:3000/api/jogos`
+URL base (local): `http://localhost:3000/api/jogos`  
+URL base (produção): `https://dashboard-gamer.onrender.com/api/jogos`
 
 | Método | Rota | Função do controller | Descrição |
 |:---:|:---|:---|:---|
@@ -275,6 +284,8 @@ Resposta `404`:
 { "mensagem": "Jogo não encontrado" }
 ```
 
+> `GET /:id` e `DELETE /:id` ainda não validam o formato do ID (hoje só o `PUT` valida). Um ID não numérico simplesmente resulta em `404`.
+
 ---
 
 ### 7.3. `POST /api/jogos`
@@ -298,13 +309,13 @@ Resposta `201`:
 }
 ```
 
-Resposta `400`:
+Respostas de erro:
 
-```json
-{ "mensagem": "Dados inválidos" }
-```
-
-> **Atenção:** na versão atual, a checagem inicial do corpo em `cadastrarJogo` está com defeito (veja [Status do Backend](#12-status-do-backend)) e o endpoint responde `500`.
+| Status | Mensagem | Quando |
+|:---:|:---|:---|
+| `400` | `Corpo da requisição inválido` | Corpo ausente, nulo ou um array |
+| `400` | `Dados inválidos` | Algum campo não passa na validação (seção 8) |
+| `500` | `Erro interno ao cadastrar o jogo.` | Falha inesperada (ex.: banco indisponível) |
 
 ---
 
@@ -326,6 +337,8 @@ Respostas de erro:
 
 | Status | Mensagem |
 |:---:|:---|
+| `400` | `Corpo da requisição inválido` |
+| `400` | `ID inválido` (o ID deve ser um inteiro positivo) |
 | `400` | `Dados inválidos` |
 | `404` | `Jogo não encontrado` |
 | `500` | `Erro interno ao alterar o jogo.` |
@@ -378,10 +391,36 @@ A função `validarValoresRecebidos` é aplicada em `POST` e `PUT`.
 |---|---|
 | Espaços nas pontas | `nome` e `plataforma` são salvos com `trim()` |
 | Horas como texto | Rejeitadas (`"10"` não é `number`) |
+| Corpo da requisição | `POST` e `PUT` exigem um objeto JSON (não nulo e não array); caso contrário, `400` |
+| ID no `PUT` | Deve ser inteiro positivo; caso contrário, `400 ID inválido` |
 | Editar/excluir ID inexistente | Responde `404` antes de alterar o banco |
 | SQL | Todas as consultas usam parâmetros `?` (prepared statements) |
 | Ordenação | `ordem` só aceita `asc` ou `desc`; qualquer outro valor é ignorado |
-| CORS | Habilitado para todas as origens |
+| CORS | Restrito às origens listadas em `origensPermitidas` (veja 8.1) |
+
+### 8.1. CORS
+
+O CORS é configurado em `src/server.js` com uma lista fixa de origens:
+
+```js
+const origensPermitidas = [
+    "https://dashboardgamer.netlify.app",
+    "http://localhost:5500"
+];
+
+app.use(cors({ origin: origensPermitidas }));
+```
+
+| Origem | Uso |
+|---|---|
+| `https://dashboardgamer.netlify.app` | Frontend publicado no Netlify |
+| `http://localhost:5500` | Frontend local (porta padrão do Live Server) |
+
+Pontos de atenção:
+
+- A origem precisa coincidir **exatamente** (protocolo + host + porta, sem `/` no final). `http://127.0.0.1:5500` é uma origem diferente de `http://localhost:5500`: se o Live Server abrir a página por `127.0.0.1`, adicione essa origem à lista ou acesse por `localhost`;
+- Para testar com outra porta (ex.: `npx serve`), inclua a nova origem em `origensPermitidas`;
+- O CORS é aplicado **pelo navegador**. Ferramentas como `curl` e Postman não são bloqueadas, então ele **não substitui autenticação** (Etapa 4 do [roadmap](../docs/ROADMAP.md)).
 
 ---
 
@@ -429,7 +468,12 @@ DB_PORT=3306
 DB_USER=root
 DB_PASSWORD=sua_senha
 DB_NAME=dashboardgamer
+DB_SSL=false
 ```
+
+| Variável opcional | Descrição |
+|---|---|
+| `PORT` | Porta do servidor (padrão `3000`; o Render define automaticamente) |
 
 > O arquivo `.env` está no `.gitignore` e **não deve ser versionado**.
 
@@ -449,7 +493,7 @@ npm run dev      # desenvolvimento: reinicia sozinho ao salvar (nodemon)
 Saída esperada:
 
 ```text
-Servidor rodando em http://localhost:3000
+Servidor rodando na porta 3000
 ```
 
 ### 10.6. Testar
@@ -465,6 +509,23 @@ curl -X POST http://localhost:3000/api/jogos \
   -H "Content-Type: application/json" \
   -d '{"nome":"Hollow Knight","horas_jogadas":35.5,"plataforma":"N. SWITCH"}'
 ```
+
+### 10.7. Produção (Render + TiDB Cloud)
+
+Em produção, a API roda no **Render** e o banco no **TiDB Cloud**. No painel do Render, configure as variáveis de ambiente (nunca no repositório):
+
+```env
+DB_HOST=<host do TiDB Cloud>
+DB_PORT=<porta informada pelo TiDB Cloud>
+DB_USER=<usuário>
+DB_PASSWORD=<senha>
+DB_NAME=dashboardgamer
+DB_SSL=true
+```
+
+- Comando de inicialização: `npm start`;
+- O Render define `PORT` automaticamente, e o servidor escuta em `0.0.0.0`;
+- Para o frontend de um novo domínio funcionar, adicione-o a `origensPermitidas` e faça um novo deploy.
 
 ---
 
@@ -517,38 +578,43 @@ PUT / DELETE /api/jogos/:id
 
 ## 12. Status do Backend
 
-**Em desenvolvimento.**
+**Em desenvolvimento — publicado e funcionando em produção.**
 
 ### Implementado
 
-- [x] Servidor Express com JSON e CORS;
-- [x] Pool de conexões MySQL com variáveis de ambiente;
+- [x] Servidor Express com JSON e **CORS restrito** às origens do frontend (Netlify e `localhost:5500`);
+- [x] Pool de conexões MySQL com variáveis de ambiente e **TLS opcional** (`DB_SSL`) para o TiDB Cloud;
 - [x] Listagem com filtro por plataforma e ordenação por nome;
 - [x] Busca por ID;
+- [x] Cadastro com validação do corpo da requisição (`POST` corrigido);
 - [x] Alteração e exclusão com verificação de existência (404);
-- [x] Validação dos dados recebidos;
+- [x] Validação do corpo, do ID (`PUT`) e dos campos;
 - [x] Consultas parametrizadas;
 - [x] Tratamento de erros com `try/catch` e respostas `500`;
-- [x] Script SQL de criação do banco.
+- [x] Scripts `start` e `dev` no `package.json`;
+- [x] Porta configurável via `PORT`;
+- [x] Script SQL de criação do banco;
+- [x] Deploy no Render, com banco no TiDB Cloud;
+- [x] CRUD testado em produção.
 
 ### Pendências conhecidas
 
-- [ ] **Corrigir `cadastrarJogo`:** a verificação do corpo usa `value` (variável inexistente) e a condição `!Array.isArray(...)` está invertida. Hoje isso gera `ReferenceError` e o `POST` responde `500`. Sugestão: `if (typeof req.body !== "object" || req.body === null || Array.isArray(req.body))`;
-- [ ] Validar `req.body` também no `PUT` (sem corpo JSON, a desestruturação falha e responde `500`);
-- [ ] Validar o limite de `horas_jogadas` (`DECIMAL(6,1)` aceita até `99999.9`);
-- [ ] Mover regras e consultas para `services/jogosService.js` (arquivo vazio);
-- [ ] Criar os scripts `start` e `dev` no `package.json`;
-- [ ] Tornar a porta configurável via `.env` (hoje fixa em `3000`);
-- [ ] Preencher `DB_NAME=dashboardgamer` no `.env.example`;
-- [ ] Restringir o CORS à origem do frontend em produção.
+Alinhadas à **Etapa 1** do [roadmap](../docs/ROADMAP.md):
+
+- [ ] Limitar `horas_jogadas` ao máximo do tipo `DECIMAL(6,1)` (`99999.9`); acima disso o banco rejeita o valor (em modo estrito) e a API responde `500` em vez de `400`;
+- [ ] Validar o ID também em `GET /:id` e `DELETE /:id`;
+- [ ] Mover regras e consultas para `services/jogosService.js` (arquivo vazio) — QL-04;
+- [ ] Criar um middleware centralizado de erros — QL-05;
+- [ ] Ler as origens do CORS de uma variável de ambiente, em vez de uma lista fixa — QL-06;
+- [ ] Preencher `DB_NAME=dashboardgamer` e documentar `PORT` no `.env.example`;
+- [ ] Ajustar o `package.json`: `main` aponta para `index.js` (inexistente), `license` está como ISC (o projeto é MIT) e a descrição está vazia;
+- [ ] Testes automatizados dos endpoints — QL-07.
 
 ### Fora do escopo da versão atual
 
-- [ ] Autenticação e autorização;
-- [ ] Jogos por usuário;
-- [ ] Paginação;
-- [ ] Testes automatizados;
-- [ ] Deploy.
+- [ ] Autenticação e autorização (Etapa 4);
+- [ ] Jogos por usuário (Etapa 4);
+- [ ] Paginação.
 
 ---
 
