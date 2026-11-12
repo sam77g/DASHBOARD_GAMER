@@ -1,12 +1,15 @@
 /* CONFIGURAÇÕES GLOBAIS */
 
 @import url('https://fonts.googleapis.com/css2?family=MuseoModerno:ital,wght@0,100..900;1,100..900&display=swap');
+
 * {
-     margin: 0; padding: 0; box-sizing: border-box; 
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
 }
 
 
-body{
+body {
     background-color: rgb(16, 0, 24);
     font-family: museomoderno;
     color: aliceblue;
@@ -14,12 +17,12 @@ body{
     margin: 5px;
 }
 
-footer a{
+footer a {
     color: aliceblue;
     text-decoration: none;
 }
 
-main{
+main {
     display: flex;
     justify-content: space-around;
     margin: 0 auto;
@@ -29,28 +32,28 @@ main{
 
 
 /* Lsta de jogos */
-.jogos{
-    width:45%;
-    height:80dvh;
+.jogos {
+    width: 45%;
+    height: 80dvh;
     text-align: left;
     display: flex;
     flex-direction: column;
     flex-grow: 4;
     order: 2;
     margin: 10px;
-    background:blueviolet;
-    border-radius:10px;
-    padding:15px;
+    background: blueviolet;
+    border-radius: 10px;
+    padding: 15px;
 }
 
-.lista{
-    flex:1;
+.lista {
+    flex: 1;
     overflow-y: auto;
-    padding-right:8px;
+    padding-right: 8px;
 }
 
 /* perfil do usuário */
-.perfil{
+.perfil {
     min-width: 40%;
     min-height: 60dvh;
     flex-grow: 4;
@@ -63,13 +66,13 @@ main{
     justify-content: center;
 }
 
-.conteudoPerfil{
+.conteudoPerfil {
     display: flex;
 }
 
 /* formulario do dashborad */
 
-.formulario{
+.formulario {
     width: 100%;
     flex-wrap: wrap;
     justify-content: center;
@@ -77,17 +80,18 @@ main{
     padding: 15px;
 }
 
-.campo{
-    display:flex;
-    flex-direction:column;
-    gap:8px;
-    margin-bottom:15px;
+.campo {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: 15px;
 }
 
-.campo label{
+.campo label {
     text-align: left;
 }
-.campo input{
+
+.campo input {
     color: blueviolet;
     align-self: center;
     padding: 5px;
@@ -95,12 +99,12 @@ main{
 }
 
 
-input::placeholder{
+input::placeholder {
     color: rgba(188, 118, 254, 0.282);
     font-weight: 600;
 }
 
-select{
+select {
     padding: 3px;
     border-radius: 5px;
     color: aliceblue;
@@ -109,17 +113,17 @@ select{
 }
 
 .campo input,
-.campo select{
+.campo select {
     border: none;
     align-self: center;
-    width:100%;
-    border:none;
-    border-radius:8px;
-    padding:8px;
-    font-family:museomoderno;
+    width: 100%;
+    border: none;
+    border-radius: 8px;
+    padding: 8px;
+    font-family: museomoderno;
 }
 
-#btn{
+#btnAdicionar {
     width: 40%;
     border: none;
     border-radius: 10px;
@@ -134,41 +138,42 @@ select{
 
 /* card dos jogos  */
 
-.gameCard{
-    display:flex;
-    gap:15px;
-    align-items:center;
+.gameCard {
+    display: flex;
+    gap: 15px;
+    align-items: center;
 
-    padding:15px;
-    margin:15px 0;
+    padding: 15px;
+    margin: 15px 0;
 
-    background:#6e3bc593;
-    border-radius:12px;
+    background: #6e3bc593;
+    border-radius: 12px;
 }
 
-.gameCard h3{
+.gameCard h3 {
     font-size: 1.5em;
 }
 
-.gameCard img{
-    width:120px;
-    height:170px;
-    
-    object-fit:cover; /* corta a imagem sem deformar */
+.gameCard img {
+    width: 120px;
+    height: 170px;
 
-    border-radius:10px;
+    object-fit: cover;
+    /* corta a imagem sem deformar */
+
+    border-radius: 10px;
 }
 
-.dadosGame{
-    flex:1;
+.dadosGame {
+    flex: 1;
     text-align: left;
 }
 
-.dadosGame p{
-    margin-bottom:8px;
+.dadosGame p {
+    margin-bottom: 8px;
 }
 
-#editarBtn{
+.GameBtn {
     display: flex;
     font-size: 0.5em;
     border-radius: 5px;
@@ -181,22 +186,23 @@ select{
     cursor: pointer;
 }
 
-#editarBtn:hover{
+.GameBtn:hover {
     transform: scale(1.05);
-    box-shadow: 0px 0px 3px black; 
-    /* box-shadow: 0 0 10px rgb(0, 106, 255), 0 0 20px rgb(162, 0, 255), 0 0 40px rgb(136, 0, 255);
-    transition: box-shadow 0.3s ease; */
+    box-shadow: 0px 0px 3px black;
+    box-shadow: 0 0 10px rgb(0, 106, 255), 0 0 20px rgb(162, 0, 255), 0 0 40px rgb(136, 0, 255);
+    transition: box-shadow 0.3s ease;
 }
 
-#editarBtn:active{
+.GameBtn:active {
     filter: brightness(110%);
     -webkit-filter: brightness(110%);
 }
 
-#pesquisaCampo{
+#pesquisaCampo {
     display: flex;
     flex-direction: row;
 }
-#pesquisaCampo input{
+
+#pesquisaCampo input {
     max-width: 100%;
 }

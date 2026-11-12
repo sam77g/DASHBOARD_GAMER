@@ -37,13 +37,13 @@ export function criarCard(jogo) {
     let editarBtn = document.createElement('button');
 
     editarBtn.textContent = 'Editar';
-    editarBtn.className = 'editarBtn';
+    editarBtn.className = 'editarBtn GameBtn';
     editarBtn.dataset.id = jogo.id;  // "salva" o id do jogo no botão
     dadosChild(editarBtn);
 
     let excluirBtn = document.createElement('button');
     excluirBtn.textContent = 'Excluir';
-    excluirBtn.className = 'excluirBtn';
+    excluirBtn.className = 'excluirBtn GameBtn';
     excluirBtn.dataset.id = jogo.id;
 
     dadosChild(excluirBtn);
