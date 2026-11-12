@@ -130,6 +130,18 @@ async function salvarEdicao() {
 
 }
 
+async function resetarTela() {
+    // Atualizar os dados locais consultando a API
+    listaDeJogos = await listarJogos();
+
+    // Atualizar os cards na tela
+    mostrarJogos(listaDeJogos);
+
+    // Limpar o formulário
+    limparInputs();
+}
+
+
 
 
 // EVENTOS DO CÓDIGO
@@ -205,15 +217,5 @@ lista.addEventListener("click", async (event) => {
 
 })
 
-async function resetarTela() {
-    // Atualizar os dados locais consultando a API
-    listaDeJogos = await listarJogos();
-
-    // Atualizar os cards na tela
-    mostrarJogos(listaDeJogos);
-
-    // Limpar o formulário
-    limparInputs();
-}
 
 

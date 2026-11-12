@@ -9,7 +9,6 @@ const conexao = mysql.createPool({
     user: process.env.DB_USER,
     password: process.env.DB_PASSWORD,
     database: process.env.DB_NAME,
-
     // Conexão segura com TiDB Cloud
     ssl: process.env.DB_SSL === "true"
         ? { minVersion: "TLSv1.2" }
