@@ -20,10 +20,6 @@ export function pesquisar(pesquisaIn, array, mensagem) {
         mensagem.textContent = "Digite um jogo.";
         return mostrarJogos(array);
     }
-    if (pesquisa.length < 3) { // se o tamanho for menor que 3 carcteres
-        mensagem.textContent = "Digite pelo menos 3 caracteres.";
-        return;
-    }
     if (jogoPesquisado.length === 0) { // se não tiver nada digitado
         mensagem.textContent = 'Nenhum jogo encontrado ;( ';
         return;
