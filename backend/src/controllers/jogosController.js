@@ -51,7 +51,7 @@ async function listarJogos(req, res) {
 
 async function cadastrarJogo(req, res) {
     try {
-        if (!Array.isArray(req.body) || req.body === null || !(value === 'object' && value !== null)) {
+        if (typeof req.body !== "object" || req.body === null || Array.isArray(req.body)) {
             return res.status(400).json({
                 mensagem: "Corpo da requisição inválido"
             });
@@ -114,9 +114,21 @@ async function buscarJogoPorId(req, res) {
 }
 async function editarJogo(req, res) {
     try {
+
+        if (typeof req.body !== "object" || req.body === null || Array.isArray(req.body)) {
+            return res.status(400).json({
+                mensagem: "Corpo da requisição inválido"
+            });
+        }
+
         let { id } = req.params;
         let { nome, horas_jogadas, plataforma } = req.body
         let parametros = [];
+
+        if (!Number.isInteger(Number(id)) || Number(id) <= 0) {
+            return res.status(400).json({ mensagem: "ID inválido" });
+        }
+
 
         if (!validarValoresRecebidos(nome, horas_jogadas, plataforma)) {
             return res.status(400).json({
@@ -131,7 +143,6 @@ async function editarJogo(req, res) {
             [id]
         );
 
-        // verifica se o [resultado] está vazio, se está significa que não há nenhum com o id solicitado
         if (resultadoId.length === 0) {
             return res.status(404).json({
                 mensagem: "Jogo não encontrado"

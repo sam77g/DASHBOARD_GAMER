@@ -21,7 +21,7 @@ function validarUser(){
         localStorage.setItem('user', JSON.stringify(user));
 
 
-        window.location.href = "./dashboard/index.html"
+        window.location.href = "./dashboard/dashboard.html"
     }
 }
 
