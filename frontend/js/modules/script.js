@@ -14,8 +14,8 @@ const pesquisaInput = document.querySelector("#pesquisaInput");
 const UserNameInfo = document.querySelector("#usernameInfo");
 const jogoInput = document.querySelector("#nomeDoJogo");
 const horasInput = document.querySelector("#horas");
+const mensagem = document.querySelector("#lista")
 const selectPlataforma = document.querySelector('#plataforma');
-const mensagem = document.querySelector('#mensagem'); // mensagem da lista enquanto digita
 let jogoEmEdicao = null;
 // DADOS
 const usernameString = localStorage.getItem('user');
