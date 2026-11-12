@@ -1,10 +1,20 @@
 // SERVIDOR - server.js
+
 require("dotenv").config(); // carrega as variáveis de ambiente
 const cors = require("cors");
 const express = require("express"); // importa o express 
 const app = express();
 
+const origensPermitidas = [
+    "https://dashboardgamer.netlify.app",
+    "http://localhost:5500"
+];
+
 const jogosRoutes = require("./routes/jogosRoutes"); // rotas
+
+app.use(cors({
+    origin: origensPermitidas
+}));
 
 // Middleware para interpretar JSON
 app.use(express.json());
