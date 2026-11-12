@@ -12,7 +12,6 @@ export function mostrarJogos(array){
         let card = criarCard(jogo);
         console.log(jogo);
         lista.appendChild(card);
-        console.log(lista.children.length);
     })
 
 }

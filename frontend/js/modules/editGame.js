@@ -3,8 +3,9 @@
 
 export function editarGame(array, id, horas, jogo, selectPlataforma) {
 
-    const jogoEncontrado = array.find(jogo => jogo.id === id);
+    const jogoEncontrado = array.find(jogo => jogo.id === id); // procura se existe algum jogo correspondende 
 
+    // verifica se o jogo está na lista
     if (!jogoEncontrado) {
         return false;
     }

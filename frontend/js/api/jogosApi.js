@@ -1,33 +1,40 @@
 // INTERLIGAÇÃO COM A API DO BACKEND
 // jogosApi.js
 
-const API_URL = "https://dashboard-gamer.onrender.com/api/jogos";
-
+const API_URL = "https://dashboard-gamer.onrender.com/api/jogos"; // API do backend presente no Render
+/*
+Função para listar os jogos
+Comunica com a API fazendo uma requisição GET /api/jogos 
+*/
 export async function listarJogos() {
     try {
+        // comunicando com a API
         const response = await fetch(API_URL);
 
+        // Se a resposta do backend for diferente de 200 ele para e exibe o erro no console
         if (!response.ok) {
             throw new Error("Erro ao consultar a API");
         }
 
+        // Transforma a resposta do backend em JSON e sala em jogos
         const jogos = await response.json();
 
-        return jogos;
+        return jogos; // retorna os jogos presentes no banco de dados
 
     } catch (error) {
         console.error("Erro ao listar jogos:", error);
-        throw error;
+        throw error;  // para caso der erro 
     }
 }
 
-
+// Função assíncrona para o cadastro do jogo utilizando POST
 export async function cadastrarJogo(jogo) {
     try {
+        // comunicação com a API
         const response = await fetch(API_URL, {
-            method: "POST",
+            method: "POST", // informa o método
             headers: {
-                "Content-Type": "application/json"
+                "Content-Type": "application/json" // informa o tipo 
             },
             body: JSON.stringify(jogo)
         });
@@ -60,6 +67,7 @@ export async function cadastrarJogo(jogo) {
     }
 }
 
+// Função assíncrona para atualizar o jogo
 export async function atualizarJogo(id, novosDados) {
     try {
         const response = await fetch(`${API_URL}/${id}`, {
@@ -84,16 +92,19 @@ export async function atualizarJogo(id, novosDados) {
     }
 }
 
+// Função para deletar o jogo a partir do id utilizando o método DELETE
 export async function deletarJogo(id) {
     try {
         const response = await fetch(`${API_URL}/${id}`, {
             method: "DELETE", // informa o método
         })
 
+        // Caso ter erro 
         if (!response.ok) {
             throw new Error("Erro ao deletar o jogo");
         }
 
+        // Mostra no console o erro 
         console.log("Jogo deletado com sucesso");
 
     } catch (error) {
