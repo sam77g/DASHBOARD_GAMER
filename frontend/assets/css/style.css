@@ -2,48 +2,76 @@
 
 @import url('https://fonts.googleapis.com/css2?family=MuseoModerno:ital,wght@0,100..900;1,100..900&display=swap');
 
+:root {
+    --primary-color: #8a2be2;
+    --text-color: #f0f8ff;
+    --text-font: 'MuseoModerno', sans-serif;
+}
+
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
 }
 
+html {
+    -webkit-text-size-adjust: 100%;
+}
 
 body {
     background-color: rgb(16, 0, 24);
-    font-family: museomoderno;
-    color: aliceblue;
+    font-family: var(--text-font);
+    color: var(--text-color);
     text-align: center;
-    margin: 5px;
+    margin: 0;
+    padding: 5px;
+    min-height: 100dvh;
+    overflow-x: hidden;
+    font-size: 1.15rem;
+}
+
+header h1 {
+    font-size: clamp(1.4rem, 5vw, 2.5rem);
+    padding: 10px 0;
+}
+
+footer {
+    padding: 15px 0;
 }
 
 footer a {
-    color: aliceblue;
+    color: var(--text-color);
     text-decoration: none;
+}
+
+img {
+    max-width: 100%;
 }
 
 main {
     display: flex;
-    justify-content: space-around;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: stretch;
+    gap: 10px;
+    width: 100%;
+    max-width: 1400px;
     margin: 0 auto;
-    box-sizing: border-box;
 }
 
-
-
-/* Lsta de jogos */
+/* Lista de jogos */
 .jogos {
-    width: 45%;
+    flex: 1 1 420px;
+    min-width: 0;
     height: 80dvh;
-    text-align: left;
+    order: 2;
     display: flex;
     flex-direction: column;
-    flex-grow: 4;
-    order: 2;
+    text-align: left;
     margin: 10px;
-    background: blueviolet;
-    border-radius: 10px;
     padding: 15px;
+    background: var(--primary-color);
+    border-radius: 10px;
 }
 
 .lista {
@@ -54,48 +82,73 @@ main {
 
 /* perfil do usuário */
 .perfil {
-    min-width: 40%;
+    flex: 1 1 320px;
+    min-width: 0;
     min-height: 60dvh;
-    flex-grow: 4;
-    padding: 10px;
     order: 1;
-    background-color: blueviolet;
-    border-radius: 10px;
+    padding: 10px;
     margin: 10px;
-    align-items: center;
-    justify-content: center;
+    background-color: var(--primary-color);
+    border-radius: 10px;
+}
+
+.titulo h1,
+#usernameInfo {
+    font-size: clamp(2rem, 6vw, 3rem);
 }
 
 .conteudoPerfil {
     display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    justify-content: center;
 }
 
-/* formulario do dashborad */
+.pesquisaTitle,
+.titulo {
+    font-size: 1.5em;
+    text-align: left;
+    margin: 10px;
+}
 
+/* formulário */
 .formulario {
-    width: 100%;
-    flex-wrap: wrap;
-    justify-content: center;
+    flex: 1 1 100%;
+    min-width: 0;
     font-weight: bold;
     padding: 15px;
+}
+
+/* conquistas só ocupa espaço quando tiver conteúdo */
+.conquistas {
+    flex: 0 1 auto;
+    min-width: 0;
+}
+
+.conquistas:not(:empty) {
+    flex: 1 1 100%;
 }
 
 .campo {
     display: flex;
     flex-direction: column;
-    gap: 8px;
-    margin-bottom: 15px;
+    gap: 10px;
+    margin-bottom: 20px;
 }
 
 .campo label {
     text-align: left;
+    font-size: 1.3rem;
 }
 
-.campo input {
-    color: blueviolet;
-    align-self: center;
-    padding: 5px;
+.campo input,
+.campo select {
+    border: none;
+    width: 100%;
     border-radius: 10px;
+    padding: 14px;
+    font-family: var(--text-font);
+    font-size: 1.2rem;
 }
 
 
@@ -107,7 +160,7 @@ input::placeholder {
 select {
     padding: 3px;
     border-radius: 5px;
-    color: aliceblue;
+    color: var(--text-color);
     background-color: rgb(168, 75, 255);
     box-shadow: 0px 0px 3px rgb(77, 25, 126);
 }
@@ -117,79 +170,85 @@ select {
     border: none;
     align-self: center;
     width: 100%;
-    border: none;
     border-radius: 8px;
     padding: 8px;
-    font-family: museomoderno;
+    font-family: var(--text-font);
+    font-size: 1rem;
+    /* evita zoom automático no iOS */
 }
 
 #btnAdicionar {
-    width: 40%;
+    display: block;
+    width: 100%;
+    max-width: none;
     border: none;
     border-radius: 10px;
-    color: aliceblue;
+    color: var(--text-color);
     background-color: rgb(90, 15, 159);
-    padding: 5px;
+    padding: 14px;
+    font-family: var(--text-font);
+    font-size: 1.3rem;
+    font-weight: bold;
     cursor: pointer;
-    align-self: left;
 }
 
-
-
-/* card dos jogos  */
-
+/* card dos jogos */
 .gameCard {
     display: flex;
+    flex-wrap: wrap;
     gap: 15px;
     align-items: center;
-
     padding: 15px;
     margin: 15px 0;
-
     background: #6e3bc593;
     border-radius: 12px;
 }
 
 .gameCard h3 {
-    font-size: 1.5em;
+    font-size: clamp(1.4rem, 3.5vw, 1.9rem);
 }
 
 .gameCard img {
-    width: 120px;
-    height: 170px;
-
+    width: clamp(90px, 25vw, 120px);
+    aspect-ratio: 120 / 170;
+    height: auto;
     object-fit: cover;
-    /* corta a imagem sem deformar */
-
     border-radius: 10px;
 }
 
 .dadosGame {
-    flex: 1;
+    flex: 1 1 150px;
+    min-width: 0;
     text-align: left;
 }
 
 .dadosGame p {
+    font-size: 1.15rem;
     margin-bottom: 8px;
 }
 
 .GameBtn {
+    font-family: var(--text-font);
+    color: white;
     display: flex;
-    font-size: 0.5em;
+    margin-bottom: 5px;
     border-radius: 5px;
-    height: 25px;
-    width: 50px;
-    background-color: #481e90bb;
-    text-align: center;
+    height: 28px;
+    padding: 0 10px;
+    background-color: #a875ffbb;
     justify-content: center;
     align-items: center;
     cursor: pointer;
+    border: none;
+    font-weight: 600;
+    font-size: 1rem;
+    height: 34px;
+    min-width: 70px;
 }
 
 .GameBtn:hover {
     transform: scale(1.05);
-    box-shadow: 0px 0px 3px black;
-    box-shadow: 0 0 10px rgb(0, 106, 255), 0 0 20px rgb(162, 0, 255), 0 0 40px rgb(136, 0, 255);
+    box-shadow: 0 0 3px rgb(244, 161, 253), 0 0 20px rgb(162, 0, 255), 0 0 40px rgb(136, 0, 255);
     transition: box-shadow 0.3s ease;
 }
 
@@ -205,4 +264,71 @@ select {
 
 #pesquisaCampo input {
     max-width: 100%;
+}
+
+/* TABLET */
+@media (max-width: 900px) {
+
+    main {
+        align-items: center;
+    }
+
+    .formulario {
+        width: 100%;
+        height: 60%;
+    }
+
+    .jogos,
+    .perfil {
+        flex-basis: 100%;
+        margin: 5px 0;
+    }
+
+    .conteudoPerfil {
+        max-height: 60dvh;
+        text-align: center;
+    }
+
+
+    .perfil {
+        min-height: auto;
+    }
+}
+
+/* CELULAR */
+@media (max-width: 600px) {
+    body {
+        padding: 0;
+    }
+
+    main {
+        gap: 0;
+    }
+
+    .conteudoPerfil {
+        flex-direction: column;
+    }
+
+    #btnAdicionar {
+        max-width: none;
+    }
+
+    .gameCard {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .gameCard img {
+        width: min(60%, 180px);
+    }
+
+    .dadosGame {
+        flex-basis: auto;
+        width: 100%;
+        text-align: center;
+    }
+
+    .GameBtn {
+        margin-inline: auto;
+    }
 }
