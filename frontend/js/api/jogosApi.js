@@ -1,8 +1,11 @@
 // INTERLIGAÇÃO COM A API DO BACKEND
 // jogosApi.js
+
+const API_URL = "https://dashboard-gamer.onrender.com";
+
 export async function listarJogos() {
     try {
-        const response = await fetch("http://localhost:3000/api/jogos");
+        const response = await fetch(API_URL);
 
         if (!response.ok) {
             throw new Error("Erro ao consultar a API");
@@ -21,7 +24,7 @@ export async function listarJogos() {
 
 export async function cadastrarJogo(jogo) {
     try {
-        const response = await fetch("http://localhost:3000/api/jogos", {
+        const response = await fetch(API_URL, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
@@ -59,7 +62,7 @@ export async function cadastrarJogo(jogo) {
 
 export async function atualizarJogo(id, novosDados) {
     try {
-        const response = await fetch(`http://localhost:3000/api/jogos/${id}`, {
+        const response = await fetch(`${API_URL}/${id}`, {
             method: "PUT", // informa o método
             headers: {
                 "Content-Type": "application/json" // informa o tipo 
@@ -83,7 +86,7 @@ export async function atualizarJogo(id, novosDados) {
 
 export async function deletarJogo(id) {
     try {
-        const response = await fetch(`http://localhost:3000/api/jogos/${id}`, {
+        const response = await fetch(`${API_URL}/${id}`, {
             method: "DELETE", // informa o método
         })
 
