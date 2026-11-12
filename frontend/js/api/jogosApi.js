@@ -1,7 +1,7 @@
 // INTERLIGAÇÃO COM A API DO BACKEND
 // jogosApi.js
 
-const API_URL = "https://dashboard-gamer.onrender.com";
+const API_URL = "https://dashboard-gamer.onrender.com/api/jogos";
 
 export async function listarJogos() {
     try {
