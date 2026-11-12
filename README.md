@@ -7,8 +7,11 @@
 ![Status](https://img.shields.io/badge/status-em%20desenvolvimento-yellow)
 ![Node](https://img.shields.io/badge/Node.js-18%2B-339933?logo=node.js&logoColor=white)
 ![Express](https://img.shields.io/badge/Express-5-000000?logo=express&logoColor=white)
-![MySQL](https://img.shields.io/badge/MySQL-8-4479A1?logo=mysql&logoColor=white)
+![MySQL](https://img.shields.io/badge/MySQL-compat%C3%ADvel-4479A1?logo=mysql&logoColor=white)
 ![JavaScript](https://img.shields.io/badge/JavaScript-ES%20Modules-F7DF1E?logo=javascript&logoColor=black)
+![Frontend](https://img.shields.io/badge/frontend-Netlify-00C7B7?logo=netlify&logoColor=white)
+![Backend](https://img.shields.io/badge/backend-Render-46E3B7?logo=render&logoColor=white)
+![Banco](https://img.shields.io/badge/banco-TiDB%20Cloud-FF7000)
 ![Licença](https://img.shields.io/badge/licen%C3%A7a-MIT-green)
 
 </div>
@@ -43,14 +46,23 @@ O projeto é dividido em duas partes independentes:
 - **Frontend:** páginas HTML/CSS e módulos JavaScript (ES Modules) executados no navegador, sem build e sem framework;
 - **Backend:** API REST em **Node.js + Express**, com persistência em **MySQL**.
 
-A comunicação entre as partes é feita via `fetch`, trocando JSON com a API em `http://localhost:3000/api/jogos`.
+A comunicação entre as partes é feita via `fetch`, trocando JSON com a API em `/api/jogos`. O frontend **não acessa o banco diretamente**: toda operação passa pela API.
 
-> **Observação:** diferente das versões anteriores do projeto (que salvavam os jogos no `localStorage`), os jogos agora são **persistidos no banco de dados MySQL**. O `localStorage` é usado apenas para guardar o usuário "logado" (nome e e-mail).
+O projeto está **publicado**:
+
+| Parte | Hospedagem | Endereço |
+|---|---|---|
+| Frontend | Netlify | `https://dashboardgamer.netlify.app` |
+| Backend (API) | Render | `https://dashboard-gamer.onrender.com/api/jogos` |
+| Banco de dados | TiDB Cloud (compatível com MySQL) | acesso apenas pela API, via TLS |
+
+> **Observação:** diferente das versões anteriores do projeto (que salvavam os jogos no `localStorage`), os jogos agora são **persistidos no banco de dados**. O `localStorage` é usado apenas para guardar o usuário "logado" (nome e e-mail).
 
 Documentação detalhada de cada parte:
 
 - [`backend/README.md`](./backend/README.md)
 - [`frontend/README.md`](./frontend/README.md)
+- [`docs/ROADMAP.md`](./docs/ROADMAP.md) — panorama atual e próximas etapas
 
 ---
 
@@ -66,7 +78,9 @@ O desenvolvimento do Dashboard Gamer tem como principais objetivos:
 - Manipular o DOM dinamicamente (criação de cards, eventos delegados);
 - Aplicar validação de dados tanto no cliente quanto no servidor;
 - Utilizar consultas SQL parametrizadas para evitar SQL Injection;
-- Praticar layout responsivo com Flexbox.
+- Praticar layout responsivo com Flexbox;
+- Restringir o acesso à API com **CORS**;
+- Publicar uma aplicação fullstack com serviços separados (Netlify, Render e TiDB Cloud).
 
 ---
 
@@ -79,7 +93,7 @@ O desenvolvimento do Dashboard Gamer tem como principais objetivos:
 - Dados do usuário salvos no `localStorage`;
 - O nome do usuário é exibido no painel de perfil do dashboard.
 
-> O login é **apenas visual** (identificação local). Não há senha, sessão ou autenticação no servidor.
+> O login é **apenas visual** (identificação local). Não há senha, sessão ou autenticação no servidor: **qualquer pessoa que conheça a API consegue consultar e modificar os jogos**, e todos os usuários compartilham a mesma biblioteca. Isso será resolvido na Etapa 4 do [roadmap](./docs/ROADMAP.md).
 
 ---
 
@@ -108,10 +122,12 @@ atualizado_em
 
 Plataformas disponíveis:
 
-- **PlayStation:** PS1, PS2, PS3, PS4, PSP, PS VITA
-- **Xbox:** XBOX, XBOX 360, XBOX ONE, XBOX SERIES
-- **Nintendo:** N. SWITCH, N. SWITCH 2
-- **PC**
+- **PlayStation:** PS1, PS2, PS3, PS4, PS5, PSP, PS VITA
+- **Xbox:** XBOX Classic, XBOX 360, XBOX ONE, XBOX SERIES S/X
+- **PC:** PC (Windows), Mac, Linux
+- **Nintendo:** NES, SNES, Nintendo 64, GameCube, Wii, Wii U, Game Boy, Game Boy Advance, Nintendo DS, Nintendo 3DS, N. SWITCH, N. SWITCH 2
+- **Sega:** Master System, Mega Drive / Genesis, Sega Saturn, Dreamcast, Game Gear
+- **Outros:** Atari 2600, Neo Geo, Android, iOS, Arcade / Fliperama
 
 ---
 
@@ -143,7 +159,7 @@ GET /api/jogos?plataforma=PC&ordem=asc
 
 ### 3.5. Perfil do jogador
 
-O painel de perfil exibe o nome do usuário logado. Os campos de **XP**, **level** e **conquistas** estão reservados na interface para evoluções futuras.
+O painel de perfil exibe o nome do usuário logado. **XP**, **level**, **conquistas** e as estatísticas da biblioteca (total de jogos e de horas) ainda não foram implementados: são a Etapa 2 do [roadmap](./docs/ROADMAP.md) e poderão ser calculados a partir dos jogos já cadastrados.
 
 ---
 
@@ -189,13 +205,15 @@ DASHBOARD_GAMER/
 │   │   │   ├── mostrarJogos.js
 │   │   │   ├── pesquisar.js
 │   │   │   ├── render.js
-│   │   │   ├── script.js
-│   │   │   └── storage.js
+│   │   │   └── script.js
 │   │   └── utils/
 │   │       └── validar.js
 │   ├── auth.js
 │   ├── index.html
 │   └── README.md
+│
+├── docs/
+│   └── ROADMAP.md
 │
 ├── CONTRIBUTING.md
 ├── LICENSE
@@ -209,8 +227,10 @@ DASHBOARD_GAMER/
 | `frontend/` | Interface, validação no cliente, consumo da API |
 | `backend/src/routes` | Definição dos endpoints |
 | `backend/src/controllers` | Regras de negócio, validação e consultas SQL |
-| `backend/src/config` | Conexão (pool) com o MySQL |
+| `backend/src/server.js` | Servidor Express, CORS restrito e porta (`PORT`) |
+| `backend/src/config` | Conexão (pool) com o MySQL/TiDB, com TLS opcional |
 | `backend/database` | Script de criação do banco e da tabela |
+| `docs/` | Documentação de planejamento (roadmap) |
 
 A separação entre frontend e backend permite evoluir cada parte de forma independente.
 
@@ -230,13 +250,21 @@ A separação entre frontend e backend permite evoluir cada parte de forma indep
 | Devicon (CDN) | Ícones do GitHub e LinkedIn |
 | Google Fonts — MuseoModerno | Tipografia do dashboard |
 
+### Hospedagem
+
+| Serviço | Uso |
+|---|---|
+| Netlify | Frontend estático |
+| Render | API Node.js / Express |
+| TiDB Cloud | Banco MySQL compatível (conexão TLS) |
+
 ### Backend
 
 | Biblioteca | Finalidade |
 |---|---|
 | `express` | Servidor HTTP e rotas |
 | `mysql2` | Conexão com o MySQL (com Promises) |
-| `cors` | Liberar requisições do frontend |
+| `cors` | Liberar requisições apenas das origens do frontend |
 | `dotenv` | Variáveis de ambiente |
 | `nodemon` *(dev)* | Reiniciar o servidor automaticamente |
 
@@ -244,7 +272,7 @@ A separação entre frontend e backend permite evoluir cada parte de forma indep
 
 ## 6. Banco de Dados
 
-Banco: **`dashboardgamer`** — tabela **`jogos`**.
+Banco: **`dashboardgamer`** — tabela **`jogos`**. Localmente roda em MySQL 8; em produção, no TiDB Cloud (compatível com MySQL), com conexão TLS (`DB_SSL=true`).
 
 ```sql
 CREATE TABLE IF NOT EXISTS jogos (
@@ -271,7 +299,12 @@ CREATE TABLE IF NOT EXISTS jogos (
 
 ## 7. API REST
 
-URL base: `http://localhost:3000/api/jogos`
+URL base:
+
+| Ambiente | URL |
+|---|---|
+| Local | `http://localhost:3000/api/jogos` |
+| Produção | `https://dashboard-gamer.onrender.com/api/jogos` |
 
 | Método | Rota | Descrição | Sucesso | Erros |
 |:---:|:---|:---|:---:|:---:|
@@ -291,6 +324,15 @@ Corpo esperado em `POST` e `PUT`:
 }
 ```
 
+### CORS
+
+A API só aceita requisições de navegador vindas das origens configuradas em `backend/src/server.js`:
+
+- `https://dashboardgamer.netlify.app` (produção);
+- `http://localhost:5500` (Live Server, desenvolvimento).
+
+A origem deve coincidir exatamente: `http://127.0.0.1:5500` **não** é o mesmo que `http://localhost:5500`. O CORS é uma proteção do navegador e não substitui autenticação (`curl` e Postman não são bloqueados).
+
 Os detalhes de cada endpoint estão em [`backend/README.md`](./backend/README.md).
 
 ---
@@ -306,7 +348,8 @@ Os detalhes de cada endpoint estão em [`backend/README.md`](./backend/README.md
 | Pesquisa | Exige no mínimo **3** caracteres |
 | Exclusão | Exige confirmação do usuário |
 | Editar / excluir inexistente | A API responde **404** |
-| Dados inválidos | A API responde **400** |
+| Dados inválidos, corpo ausente ou ID inválido (`PUT`) | A API responde **400** |
+| Origem não permitida | O navegador bloqueia a resposta (CORS) |
 
 ### Fluxo de edição
 
@@ -324,7 +367,7 @@ Para executar o projeto, é necessário possuir:
 - **Node.js 18 ou superior** (com `npm`);
 - **MySQL 8** (ou MariaDB compatível) em execução;
 - Navegador moderno;
-- Um servidor estático para o frontend (ex.: extensão **Live Server** do VS Code);
+- Um servidor estático para o frontend na porta **5500** (ex.: extensão **Live Server** do VS Code);
 - Git, caso queira clonar o projeto.
 
 Verifique as versões instaladas:
@@ -366,33 +409,42 @@ DB_PORT=3306
 DB_USER=root
 DB_PASSWORD=sua_senha
 DB_NAME=dashboardgamer
+DB_SSL=false
 ```
+
+`PORT` é opcional (padrão `3000`). Use `DB_SSL=true` ao conectar em um banco remoto que exija TLS, como o TiDB Cloud.
 
 ### 10.4. Instalar as dependências e iniciar o backend
 
 ```bash
 npm install
-node src/server.js
-```
-
-Ou, com reinício automático:
-
-```bash
-npx nodemon src/server.js
+npm start        # node src/server.js
+npm run dev      # reinicia sozinho ao salvar (nodemon)
 ```
 
 O servidor ficará disponível em `http://localhost:3000`.
 
 ### 10.5. Abrir o frontend
 
-Em outro terminal ou no VS Code, abra a pasta `frontend/` com um servidor estático (por exemplo, **Live Server** sobre `frontend/index.html`).
-
-```bash
-cd frontend
-npx serve .
-```
+Abra a pasta `frontend/` com o **Live Server** do VS Code (porta **5500**) sobre `frontend/index.html` e acesse por `http://localhost:5500`.
 
 > Os módulos JavaScript (`type="module"`) **não funcionam** abrindo o arquivo diretamente (`file://`). Use sempre um servidor HTTP.
+>
+> Outras portas (ex.: `npx serve`) precisam ser adicionadas a `origensPermitidas` em `backend/src/server.js`, senão o navegador bloqueia as requisições por CORS.
+
+### 10.6. Apontar o frontend para a API
+
+Por padrão, `frontend/js/api/jogosApi.js` usa a **API de produção** (`https://dashboard-gamer.onrender.com/api/jogos`). Para usar o backend local, altere `API_URL` para `http://localhost:3000/api/jogos` (sem versionar a mudança).
+
+### 10.7. Publicação
+
+| Parte | Serviço | Observações |
+|---|---|---|
+| Frontend | Netlify | Site estático, sem build |
+| Backend | Render | Comando `npm start`; variáveis `DB_*` e `DB_SSL=true` no painel; `PORT` definido pelo Render |
+| Banco | TiDB Cloud | Execute o `schema.sql` no banco `dashboardgamer` |
+
+Ao publicar o frontend em um novo domínio, adicione-o a `origensPermitidas` e faça um novo deploy do backend.
 
 ---
 
@@ -401,22 +453,22 @@ npx serve .
 O fluxo geral do Dashboard Gamer pode ser representado da seguinte maneira:
 
 ```text
-                ┌──────────────────────┐
-                │    Navegador         │
-                │    (frontend)        │
-                └──────────┬───────────┘
-                           │  fetch (JSON)
-                           ▼
-                ┌──────────────────────┐
-                │  API Express :3000   │
-                │  /api/jogos          │
-                └──────────┬───────────┘
-                           │  mysql2 (pool)
-                           ▼
-                ┌──────────────────────┐
-                │  MySQL               │
-                │  dashboardgamer.jogos│
-                └──────────────────────┘
+                ┌──────────────────────────────┐
+                │  Navegador (frontend)        │
+                │  Netlify                     │
+                └──────────────┬───────────────┘
+                               │  fetch (JSON) + CORS
+                               ▼
+                ┌──────────────────────────────┐
+                │  API Express (Render)        │
+                │  /api/jogos                  │
+                └──────────────┬───────────────┘
+                               │  mysql2 (pool, TLS)
+                               ▼
+                ┌──────────────────────────────┐
+                │  TiDB Cloud (MySQL)          │
+                │  dashboardgamer.jogos        │
+                └──────────────────────────────┘
 ```
 
 ### Fluxo de uso
@@ -468,42 +520,47 @@ Preencher formulário
 
 ## 12. Status do Projeto
 
-**Em desenvolvimento.**
+**Em desenvolvimento — publicado e com o CRUD funcionando em produção.**
 
 ### Implementado
 
-- [x] Tela de login com validação básica;
+- [x] Tela de login com validação básica e redirecionamento para o dashboard;
 - [x] Exibição do usuário no dashboard;
-- [x] API REST com CRUD de jogos;
-- [x] Persistência em MySQL;
+- [x] API REST com CRUD de jogos (testado em produção);
+- [x] Persistência em banco MySQL compatível (TiDB Cloud);
 - [x] Consultas SQL parametrizadas;
 - [x] Filtro por plataforma e ordenação por nome na API;
-- [x] Validação de dados no backend;
+- [x] Validação de dados no backend (corpo, ID e campos);
 - [x] Validação de dados e bloqueio de duplicidade no frontend;
 - [x] Cadastro, edição e exclusão pela interface;
 - [x] Pesquisa em tempo real;
 - [x] Cards gerados dinamicamente;
 - [x] Frontend modularizado com ES Modules;
-- [x] CORS habilitado.
+- [x] **CORS restrito** às origens do frontend;
+- [x] Scripts `start` e `dev` e porta configurável (`PORT`);
+- [x] Conexão TLS com o banco remoto (`DB_SSL`);
+- [x] Deploy: Netlify (frontend), Render (backend) e TiDB Cloud (banco).
 
-### Em andamento / pendências conhecidas
+### Pendências conhecidas
 
-- [ ] **Cadastro (`POST`):** a validação do corpo da requisição em `jogosController.js` referencia uma variável inexistente (`value`) e a condição está invertida, o que faz o endpoint responder **500**. Precisa ser corrigida para o cadastro funcionar;
-- [ ] **Login → dashboard:** o formulário e o `auth.js` redirecionam para `./dashboard/index.html`, mas o arquivo se chama `dashboard/dashboard.html`;
-- [ ] Camada `services` (`jogosService.js` está vazio);
-- [ ] Renderização de XP, level, conquistas, total de horas e quantidade de jogos (`render.js` com funções vazias);
-- [ ] Remoção do `storage.js` (não é mais utilizado, pois os dados vêm da API);
-- [ ] Scripts `start` e `dev` no `package.json`;
-- [ ] Porta e URL da API configuráveis (hoje fixas em `3000` e `localhost`);
-- [ ] Preencher o `CONTRIBUTING.md`.
+O planejamento completo está em [`docs/ROADMAP.md`](./docs/ROADMAP.md). As principais pendências imediatas (Etapa 1):
+
+- [ ] Mostrar erros de cadastro/edição na interface (hoje só no console);
+- [ ] Alinhar as validações do frontend e do backend (tamanho do nome, limite de horas);
+- [ ] Camada `services` (`jogosService.js` está vazio) e middleware central de erros;
+- [ ] Configuração por ambiente: `API_URL` fixa no frontend e origens do CORS fixas no backend;
+- [ ] Testes automatizados;
+- [ ] `render.js` com funções vazias (XP, level, conquistas, total de horas e quantidade de jogos) — Etapa 2;
+- [ ] `.env.example` com `DB_NAME` vazio e sem `PORT`; `package.json` com `main` e `license` inconsistentes;
+- [ ] Pequenos ajustes no login (`action` do formulário, `name="sername"`, link do LinkedIn);
+- [ ] Preencher o `CONTRIBUTING.md` (hoje vazio).
 
 ### Fora do escopo da versão atual
 
-- [ ] Autenticação real (senha, sessão ou JWT);
-- [ ] Jogos separados por usuário;
+- [ ] Autenticação real (senha, sessão ou JWT) — Etapa 4;
+- [ ] Jogos separados por usuário — Etapa 4;
 - [ ] Capas personalizadas por jogo;
-- [ ] Testes automatizados;
-- [ ] Deploy.
+- [ ] Gráficos e recursos sociais.
 
 ---
 
