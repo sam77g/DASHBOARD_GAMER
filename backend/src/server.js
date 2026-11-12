@@ -18,8 +18,6 @@ app.use(cors({
 
 // Middleware para interpretar JSON
 app.use(express.json());
-// Middleware do CORS
-app.use(cors());
 
 // Registrar as rotas de jogos
 // /api/jogos + /
