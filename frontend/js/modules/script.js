@@ -7,7 +7,7 @@ import { editarGame } from "./editGame.js"
 
 // Variavéis
 // DOM ELEMENTS
-const btn = document.querySelector('#btn');
+const btn = document.querySelector('#btnAdicionar');
 // const btnEditar = document.querySelector('#editarBtn'); // botão de editar
 // inputs
 const pesquisaInput = document.querySelector("#pesquisaInput");
@@ -27,14 +27,14 @@ let listaDeJogos = [];
 
 // funções
 async function adicionarDados() {
-    
+
     // DOM ELEMENTS 
     const valorSelect = String(selectPlataforma.value)
     const jogo = jogoInput.value;
     const horasJogadas = Number(horasInput.value)
     const plataforma = selectPlataforma.options[selectPlataforma.selectedIndex].text;
     const jogoNome = jogo.trim().toLowerCase()
-        
+
     //  validação 
     // verifica se o usuário digitou o nome e as horas jogadas, além de verificar o valor do select
     const resultadoValidacao = validar(
